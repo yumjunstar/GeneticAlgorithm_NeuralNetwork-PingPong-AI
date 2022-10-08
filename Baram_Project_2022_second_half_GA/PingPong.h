@@ -15,7 +15,7 @@ private:
 	static constexpr size_t Default_AI_BladeCount = SIZE_OF_ROW_SCREEN - 10;
 	static constexpr size_t Default_Blade_Speed = 1;
 	static constexpr size_t Default_Blade_Size = 1;
-	static constexpr size_t Default_Ball_Speed = 1;
+	static constexpr size_t Default_Ball_Speed = 2;
 	static constexpr size_t Default_CurrentGeneration = 0;
 
 
@@ -75,13 +75,14 @@ public:
 	vector <Coor> GetAllRightAIBladeCoor();
 
 	//모든 탁구채들의 점수 반환
-	vector <size_t> GetAllBladesScores();
+	vector <Blade_Info> GetAllBladesScores();
 	size_t GetAIBladeScore(size_t index);
 	//최대 점수 반환 학습을 위한
 	size_t GetMaxScoreForLearn();
 	//현재 공의 위치 반환
 	Coor GetBallCoor();
 
+	void SetRandomBallDirection();
 	Ball_Direction GetBallDirection();
 	//게임 횟수 반환 학습을 위한
 	size_t GetGameTries();

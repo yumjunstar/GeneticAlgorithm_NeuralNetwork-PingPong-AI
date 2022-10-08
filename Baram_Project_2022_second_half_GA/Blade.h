@@ -30,6 +30,7 @@ public:
 	void add_score(int score);
 	void set_score(int score);
 	int get_score();
+	int GetID();
 	size_t get_blade_size();
 	Coor GetBladeCoordinate();
 }; // end of Blade class

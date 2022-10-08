@@ -8,10 +8,19 @@ private:
 	//전체 가중치 묶음의 개수
 	int weight_matrix_count;
 
+	//입력 계층 노드 개수
 	int input_node_count;
+
+	//은닉 계층 개수
 	int hidden_layer_count;
+	//은닉 계층 노드 각 개수
 	int* each_hidden_node_count;
+
+	//출력 계층 노드 개수
 	int output_node_count;
+
+	int* each_matrix_rows;
+	int* each_matrix_cols;
 
 	static constexpr int DefaultLayerNodeCount[] = {5, 3, 3};
 	static constexpr int DefaultLayerCount = 5;
@@ -42,5 +51,8 @@ public:
 	static double relu(double x);
 	static size_t max_node_index(MatrixXd arr);
 	void PrintMatrix(MatrixXd matrix) const;
+
+	MatrixXd* ReturnAllWeightMatrix();
+	int GetWeightMatrixCount();
 };
 

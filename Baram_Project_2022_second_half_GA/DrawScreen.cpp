@@ -137,16 +137,16 @@ void DrawScreen::update_info(int GameTries, int ai_score, int player_score, int 
 	//플레이어 점수 : 10 , AI 점수 : 10 , 세대 : 1
 	if (GameTries >= 0)
 	{
-		printf("시도: %d", GameTries);
+		printf("Respawn: %d", GameTries);
 	}
 	if (player_score >= 0) {//점수가 0 이상인 것만 표기
-		printf(", 플레이어 점수: %d", player_score);
+		printf(", Player Score: %d", player_score);
 	}
 	if (ai_score >= 0) {
-		printf(", AI 점수: %d", ai_score);
+		printf(", AI Score: %d", ai_score);
 	}
 	if (gen >= 0) {
-		printf(", 세대: %d", gen);
+		printf(", Generation: %d", gen);
 	}
 	printf("         ");
 }

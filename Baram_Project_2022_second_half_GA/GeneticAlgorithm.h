@@ -2,6 +2,7 @@
 #include "Common_Define.h"
 #include "NeuralNetwork.h"
 #include "PingPong.h"
+typedef MatrixXd* OneDNNWeights;
 class GeneticAlgorithm
 {
 //init->play->choice->crossover->mutation
@@ -9,17 +10,48 @@ class GeneticAlgorithm
 private:
 	// 신경망에서 출력 처음부터 UP과 DOWN과 STOP
 	enum NNOUT_DIRECTION { UP, DOWN, STOP };
+	static constexpr int NeuralShape[] = { 5, 100, 100, 2 };
+	static constexpr int NeuralLayerCount = 4;
+	static constexpr int WeightMatrixCount = NeuralLayerCount - 1;
+	static constexpr int MutationMeanValue = 0;
+	static constexpr int MutationSigmaValue = 5;
+	static constexpr int PerGenerationGameTries = 100;
+
+
+
+	//동적 배열 만들고 할당 해제하는게 감당 안되서 이중 vector로 사용하고자 함
+
 	//신경망
 	NeuralNetwork* nn;
 	//게임
 	PingPong* ppg;
-	size_t all_blades_count;
+	size_t AllAIBladesCount;
 	DrawScreen* ds_p;
 	int Generation;
+
+
+	vector <Blade_Info> AllBladeScoreVector;
+	vector <Coor> AllBladeCoorVector;
+
+	vector <OneDNNWeights> EliteNeuralWeightMatrixVector;
+
+	OneDNNWeights DNN_Copy(OneDNNWeights source, int size);
+	size_t* Output_CMD_Array;
+	bool* KeyUp_Binary_CMD;
+	bool* KeyDown_Binary_CMD;
+
+
+	size_t LoopRepeat;
+
+	void CleanUpBladesForVisability(int GameTries, int blade_id);
+	void ChangeRandomDirectionForPerfectLearn(int RepeatLoop);
+	void SetBladeDirection(NNOUT_DIRECTION direction, int blade_id);
+	OneDNNWeights AddNormalDistribution(OneDNNWeights standard);
 public:
 	GeneticAlgorithm(DrawScreen* ds, size_t blades_count);
 	~GeneticAlgorithm();
-	void init(size_t blades_count);
+
+	void init();
 	void play();
 	void choice();
 	void crossover();

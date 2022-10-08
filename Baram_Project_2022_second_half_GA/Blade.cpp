@@ -69,6 +69,11 @@ int Blade::get_score() {
 	return this->score;
 }
 
+int Blade::GetID()
+{
+	return this->id;
+}
+
 size_t Blade::get_blade_size()
 {
 	return this->blade_size;

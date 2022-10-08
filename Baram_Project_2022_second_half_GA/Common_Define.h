@@ -16,6 +16,7 @@
 #include <cmath>//
 
 #include <cstdlib> //size_t
+#include <random>
 
 #define C_NRML "\033[0m"
 #define C_BLCK "\033[30m"
@@ -48,7 +49,7 @@
 #define MIN_X_CAN_GO 2
 
 #define DIRECTION_COUNT 7
-#define DELAY_PER_FRAME 50
+#define DELAY_PER_FRAME 5
 //배열에 어떤값으로 저장할지 정의 하는 enum
 enum ICON_NUMBER {
 	BLANK_SYMBOL, BALL_SYMBOL, LEFT_BLADE_SYMBOL, RIGHT_BLADE_SYMBOL,
@@ -60,6 +61,12 @@ struct Coor {
 	int x;
 	int y;
 };
+struct Blade_Info {
+	int score;
+	size_t ID_index;
+};
+
+
 using namespace std;
 using namespace Eigen;
 //전역 변수로 사용하고 싶었지만 DrawScreen을 불러와야 해서 못함

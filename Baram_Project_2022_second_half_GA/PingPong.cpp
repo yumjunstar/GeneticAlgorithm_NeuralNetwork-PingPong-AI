@@ -160,40 +160,39 @@ void PingPong::draw_game_layout() {
 // function to respond to player inputs
 
 void PingPong::play() {
-	ball->move_ball(); // to move the ball in direction specified by 'direction'
-	if (LearnMode) 
-	{
-		
-		if (_kbhit()) { // if any key is pressed : take action
-			char key = _getch(); // get the pressed key character
-			if (key == 'r') ball->randomize_ball_direction();
-			if (key == 't') terminate = true;
-			if (ball->get_ball_direction() == STOP) ball->randomize_ball_direction();
-		}
-	}
-	else
-	{
-		if (_kbhit()) { // if any key is pressed : take action
-			char key = _getch(); // get the pressed key character
+	static bool FastMode = false;
+	int delay;
+	if (FastMode) delay = 0;
+	else delay = DELAY_PER_FRAME;
+	ball->move_ball();
+	if (_kbhit()) { // if any key is pressed : take action
+		char key = _getch(); // get the pressed key character
 
-			switch (key) {
-			case PLAYER_UP_KEY:
+		switch (key) {
+		case PLAYER_UP_KEY:
+			if (blades_left_player)
 				blades_left_player->blade_move_up();
-				break;
-			case PLAYER_DOWN_KEY:
+			break;
+		case PLAYER_DOWN_KEY:
+			if (blades_left_player)
 				blades_left_player->blade_move_down();
-				break;
-			case 't':
-				terminate = true;
-				break;
-			}
-
-			// if it's new game move the ball in random directions				
-			if (ball->get_ball_direction() == STOP) ball->randomize_ball_direction();
+			break;
+		case 'r':
+			ball->randomize_ball_direction();
+			break;
+		case 'f':
+			FastMode = !FastMode;
+			break;
+		case 't':
+			terminate = true;
+			break;
 		}
+
+		// if it's new game move the ball in random directions				
+		if (ball->get_ball_direction() == STOP) ball->randomize_ball_direction();
 	}
 
-
+	Sleep(delay);
 }
 
 // function to moniter ball position
@@ -335,11 +334,14 @@ vector<Coor> PingPong::GetAllRightAIBladeCoor()
 
 //모든 탁구채들의 점수 반환
 
-vector<size_t> PingPong::GetAllBladesScores()
+vector<Blade_Info> PingPong::GetAllBladesScores()
 {
-	vector <size_t> temp;
+	vector <Blade_Info> temp;
 	for (int i = 0; i < this->RightAIBladeRemainCount; i++) {
-		temp.push_back(blades_right_ai[i]->get_score());
+		Blade_Info temp_struct;
+		temp_struct.ID_index = blades_right_ai[i]->GetID();
+		temp_struct.score = blades_right_ai[i]->get_score();
+		temp.push_back(temp_struct);
 	}
 	return temp;
 }
@@ -365,6 +367,11 @@ size_t PingPong::GetMaxScoreForLearn()
 Coor PingPong::GetBallCoor()
 {
 	return ball->GetBallCoordinate();
+}
+
+void PingPong::SetRandomBallDirection()
+{
+	ball->randomize_ball_direction();
 }
 
 Ball_Direction PingPong::GetBallDirection()
