@@ -1,28 +1,32 @@
 #include "DrawScreen.h"
 
-void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COLUMN_SCREEN], const int row) {
-	static int prv_row;
-	static int prv_col;
-	static int** prv_arr;
-	const int col = SIZE_OF_COLUMN_SCREEN;
-	if ((prv_row != row) || (prv_col != col)) {//아예 크기 조차 다르면 다시 지우고 다시 해야 한다.
+void DrawScreen::screen_clear()
+{
+	system("cls");
+}
+
+void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const int row) {
+	static int prv_row = 0;
+	static int prv_col = 0;
+	static int** prv_arr = nullptr;
+	if ((prv_row != row) || (prv_col != SIZE_OF_COL_SCREEN)) {//아예 크기 조차 다르면 다시 지우고 다시 해야 한다.
 		//이전 배열을 저장한 것을 그대로 사용할 수 없고 의미가 없으므로 지운다.
 		if (prv_arr != nullptr) {
 			for (int k = 0; k < prv_row; k++) {
-				delete[] prv_arr;
+				delete[] prv_arr[k];
 			}
 		}
 
 		prv_arr = new int* [row];
 		for (int k = 0; k < row; k++) {
-			prv_arr[k] = new int[col];
+			prv_arr[k] = new int[SIZE_OF_COL_SCREEN];
 		}
 
 
 
 		//system("cls");
 		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
+			for (int j = 0; j < SIZE_OF_COL_SCREEN; j++) {
 				gotoxy(j, i);//x, y;
 				draw_convert(arr[i][j]);
 			}
@@ -30,7 +34,7 @@ void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COLUMN_SCREEN], con
 	}
 	else {//크기가 같으면
 		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < col; j++) {
+			for (int j = 0; j < SIZE_OF_COL_SCREEN; j++) {
 				if (prv_arr[i][j] != arr[i][j]) {//바뀐 부분만 이동해서 출력한다.
 					gotoxy(j, i);//x, y;
 					draw_convert(arr[i][j]);
@@ -46,12 +50,12 @@ void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COLUMN_SCREEN], con
 
 
 	for (int i = 0; i < row; i++) {//여기는 항상 이전과 이후의 배열 크기가 같아야 한다.
-		for (int j = 0; j < col; j++) {
+		for (int j = 0; j < SIZE_OF_COL_SCREEN; j++) {
 			prv_arr[i][j] = arr[i][j];
 		}
 	}
 	prv_row = row;
-	prv_col = col;
+	prv_col = SIZE_OF_COL_SCREEN;
 }
 void DrawScreen::draw_convert(ICON_NUMBER array_icon_symbol) {
 	switch (array_icon_symbol) {
@@ -117,28 +121,28 @@ void DrawScreen::center_text(string text[], int NumberOfStr, bool Line_Number, i
 	for (int i = 0; i < NumberOfStr; i++) {
 		//라인별 쓰기 시작 위치 전체 크기의 절반 - 텍스트 길이의 절반
 		int each_str_size = text[i].size();
-		assert(SIZE_OF_COLUMN_SCREEN >= each_str_size);
-		int write_start_col_pos = (SIZE_OF_COLUMN_SCREEN - each_str_size) / 2; 
+		assert(SIZE_OF_COL_SCREEN >= each_str_size);
+		int write_start_col_pos = (SIZE_OF_COL_SCREEN - each_str_size) / 2; 
 		gotoxy_for_only_1byte(write_start_col_pos, ++write_row_pos);
 		if (Line_Number) printf("%d. %s\n", i + 1, text[i].c_str());
 		else printf("%s\n", text[i].c_str());
 	}
 }
 
-void DrawScreen::update_info(int player_score, int ai_score, int gen) //점수 표시하기 밑에다가
+void DrawScreen::update_info(int ai_score, int player_score, int gen) //점수 표시하기 밑에다가
 {
 
 
-	gotoxy(SIZE_OF_ROW_SCREEN, 1);//내려가고
+	gotoxy(0, SIZE_OF_ROW_SCREEN + 1);//내려가고
 
 	//플레이어 점수 : 10 , AI 점수 : 10 , 세대 : 1
 	if (player_score >= 0) {//점수가 0 이상인 것만 표기
-		printf("플레이어 점수 : %d , ", player_score);
+		printf("플레이어 점수 : %d", player_score);
 	}
 	if (ai_score >= 0) {
-		printf("AI 점수 : %d , ", ai_score);
+		printf(", AI 점수 : %d", ai_score);
 	}
 	if (gen >= 0) {
-		printf("세대 : %d", gen);
+		printf(", 세대 : %d", gen);
 	}
 }

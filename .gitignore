@@ -35,3 +35,8 @@
 /Baram_Project_2022_second_half_GA/Baram_Project_2022_second_half_GA.vcxproj.user
 *.vcxproj
 *.sln
+/x64/Debug
+/Baram_Project_2022_second_half_GA/x64/Debug/Baram_Pr.a2f4c00d.tlog
+*.recipe
+*.ilk
+/Baram_Project_2022_second_half_GA/x64/Debug

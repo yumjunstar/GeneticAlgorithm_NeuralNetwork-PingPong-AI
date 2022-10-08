@@ -12,6 +12,9 @@ private:
 	int hidden_layer_count;
 	int* each_hidden_node_count;
 	int output_node_count;
+
+	static constexpr int DefaultLayerNodeCount[] = {5, 3, 2};
+	static constexpr int DefaultLayerCount = 3;
 public:
 	NeuralNetwork();
 	NeuralNetwork(int each_layer_node_count[], int all_layer_count);

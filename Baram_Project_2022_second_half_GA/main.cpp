@@ -6,12 +6,21 @@
 #include "GeneticAlgorithm.h"
 #include "Common_Define.h"
 #include "Menu.h"
+void init_setting();
+
 int main(void) {
+	init_setting();
+	DrawScreen *dds = new DrawScreen;
+	GeneticAlgorithm ga(dds, 2);
+	ga.play();
+
+	//Menu m(dds);
+	//m.StartMenu();
+	delete dds;
+}
+void init_setting()
+{
 	char temp[100];
-	sprintf_s(temp, 100, "mode con cols=%d lines=%d | title %s", SIZE_OF_COLUMN_SCREEN + 50, SIZE_OF_ROW_SCREEN + 10, "Ping Pong AI");
+	sprintf_s(temp, 100, "mode con cols=%d lines=%d | title %s", SIZE_OF_COL_SCREEN + 50, SIZE_OF_ROW_SCREEN + 10, "Ping Pong AI");
 	system(temp);
-	//DrawScreen* ds = new DrawScreen();
-	Menu m;
-	m.StartMenu();
-	//delete ds;
 }

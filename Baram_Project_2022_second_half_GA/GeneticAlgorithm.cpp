@@ -1,9 +1,16 @@
 #include "GeneticAlgorithm.h"
 
-GeneticAlgorithm::GeneticAlgorithm(size_t blades_count) 
+GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count) 
 {
+	ds_p = ds;
 	Generation = 0;
-	ppg = new PingPong;//처음에 게임 시작
+
+
+
+
+	ppg = new PingPong(ds, true, blades_count);
+	
+	//처음에 게임 시작
 	init(blades_count);//신경망 만들기
 }
 GeneticAlgorithm::~GeneticAlgorithm()
@@ -20,11 +27,21 @@ void GeneticAlgorithm::init(size_t blades_count)
 }
 void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가
 {
-	while (Generation <= 1000) {
-		ppg->lets_ping_pong();
-		Generation++;
+	//게임을 몇번 플레이 하게 할까
+	//한 세대당 100번 정도 플레이 하게 하기
+	const int repeat = 100;
+	vector <size_t> AllBladeScore;
+	vector <Coor> AllBladeCoor;
+	Coor BallCoor;
+	while (ppg->GetGameTries() <= repeat) 
+	{
+		ppg->draw_game_layout();
+		ppg->play();
+		ppg->monitor_ball();
+		AllBladeCoor = ppg->GetAllRightAIBladeCoor();
+		BallCoor = ppg->GetBallCoor();
 	}
-
+	AllBladeScore = ppg->GetAllBladesScores();
 }
 void GeneticAlgorithm::choice()//신경망 고르기
 {

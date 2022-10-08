@@ -4,29 +4,31 @@
 #include "PingPong.h"
 class Menu
 {
+	DrawScreen* ds_p;
 public:
+	Menu(DrawScreen* ds)
+	{
+		if (ds == (DrawScreen*)nullptr) ds_p = new DrawScreen;
+		else ds_p = ds;
+	}
 	void StartMenu() {
 		system("cls");
 		string menu_str[] = { "AI 학습 시키기", "학습한 내용을 바탕으로 플레이하기" };
-		DrawScreen ds;
-		ds.center_text(menu_str, 2);
-		int AmountOfBlade = 10;
-		int BladeSpeed = 1;
-		int BallSpeed = 2;
-		int BladeSize = 3;
+		ds_p->center_text(menu_str, 2);
+
 		PingPong* game_version = nullptr;
 		int key;
 		scanf_s("%d", &key);
 		switch (key) {
 		case 1:
 			//학습 모드
-			game_version = new PingPong(true, AmountOfBlade, BladeSpeed, BladeSize, BallSpeed);
+			game_version = new PingPong(ds_p, true);
 			game_version->lets_ping_pong();
 
 			break;
 		case 2:
 			//경쟁 모드
-			game_version = new PingPong(false, 1, BladeSpeed, BladeSize, BallSpeed);
+			game_version = new PingPong(ds_p, false);
 			game_version->lets_ping_pong();
 			break;
 		}

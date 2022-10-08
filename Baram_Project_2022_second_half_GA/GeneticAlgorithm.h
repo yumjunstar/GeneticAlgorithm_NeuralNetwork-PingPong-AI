@@ -7,17 +7,20 @@ class GeneticAlgorithm
 //init->play->choice->crossover->mutation
 //이 한 세대이다.
 private:
-	NeuralNetwork* nn;//신경망
-	PingPong* ppg;//게임
+	//신경망
+	NeuralNetwork* nn;
+	//게임
+	PingPong* ppg;
 	size_t all_blades_count;
+	DrawScreen* ds_p;
 	int Generation;
 public:
-	GeneticAlgorithm(size_t blades_count);
+	GeneticAlgorithm(DrawScreen* ds, size_t blades_count);
 	~GeneticAlgorithm();
-	void init(size_t blades_count);//초기 집단 설정
-	void play();//게임 시작하고 여러 신경망을 평가
-	void choice();//신경망 고르기
-	void crossover(); //신경망 교차
-	void mutation();//신경망 변이
+	void init(size_t blades_count);
+	void play();
+	void choice();
+	void crossover();
+	void mutation();
 };
 

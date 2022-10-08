@@ -3,16 +3,20 @@
 class Ball {
 private:
 	int x, y, center_x, center_y; // to hold postions (current and center)
+	static constexpr size_t BallMAXMoveRange_x = SIZE_OF_COL_SCREEN - 1;
+	static constexpr size_t BallMAXMoveRange_y = SIZE_OF_ROW_SCREEN - 1;
+	static constexpr size_t BallMINMoveRange_x = 0;//MIN_X_CAN_GO;
+	static constexpr size_t BallMINMoveRange_y = 0;//MIN_Y_CAN_GO;
 	int speed;
 	Ball_Direction direction; // to hold direction of motion of ball
 public:
 	// constructor
-	Ball(int x, int y) { // initial position of the ball
+	Ball(int x, int y, int speed) { // initial position of the ball
 		this->center_x = x; // center_X and center_y store the initial value
 		this->center_y = y;
 		this->x = x; // x and y store current value of the ball position
 		this->y = y;
-		this->speed = 1;
+		this->speed = speed;
 		this->direction = STOP; // ball is initialized static
 	}
 	Ball_Direction get_ball_direction() const{
@@ -39,8 +43,8 @@ public:
 	}
 
 	// function to move ball around the screen
-	pair<int, int> get_ball_coordinate() const {
-		return make_pair(x, y);
+	Coor GetBallCoordinate() const {
+		return Coor({ x, y });
 	}
 
 
@@ -48,38 +52,62 @@ public:
 
 	// function to move ball around the screen
 	void move_ball() { // x increases along right
+		int sum_x = 0;
+		int sum_y = 0;
 		switch (direction) { // y increases along bottom
 		case STOP:
 			break;
 		case LEFT:
-			x -= speed;
-
+			sum_x = x - this->speed;
+			if (sum_x >= BallMINMoveRange_x) x = sum_x;
+			else x = BallMINMoveRange_x;
 			break;
 		case RIGHT:
-			x += speed;
-
+			sum_x = x + this->speed;
+			if (sum_x <= BallMAXMoveRange_x) x = sum_x;
+			else x = BallMAXMoveRange_x;
 			break;
 		case UPLEFT:
-			x -= speed;
-			y -= speed;
+			sum_x = x - this->speed;
+			sum_y = y - this->speed;
+
+			if (sum_x >= BallMINMoveRange_x) x = sum_x;
+			else x = BallMINMoveRange_x;
+			if (sum_y >= BallMINMoveRange_y) y = sum_y;
+			else y = BallMINMoveRange_y;
 			break;
 		case DOWNLEFT:
-			x -= speed;
-			y += speed;
+			sum_x = x - this->speed;
+			sum_y = y + this->speed;
+
+			if (sum_x >= BallMINMoveRange_x) x = sum_x;
+			else x = BallMINMoveRange_x;
+			if (sum_y <= BallMAXMoveRange_y) y = sum_y;
+			else y = BallMAXMoveRange_y;
 			break;
 		case UPRIGHT:
-			x += speed;
-			y -= speed;
+			sum_x = x + this->speed;
+			sum_y = y - this->speed;
+
+			if (sum_x <= BallMAXMoveRange_x) x = sum_x;
+			else x = BallMAXMoveRange_x;
+			if (sum_y >= BallMINMoveRange_y) y = sum_y;
+			else y = BallMINMoveRange_y;
 			break;
 		case DOWNRIGHT:
-			x += speed;
-			y += speed;
+			sum_x = x + this->speed;
+			sum_y = y + this->speed;
+
+			if (sum_x <= BallMAXMoveRange_x) x = sum_x;
+			else x = BallMAXMoveRange_x;
+			if (sum_y <= BallMAXMoveRange_y) y = sum_y;
+			else y = BallMAXMoveRange_y;
 			break;
 		default: // in case direction take execptional value, ignore it.
 			break;
 		}
 		assert(x >= 0);
-		assert(x < SIZE_OF_COLUMN_SCREEN);
+		assert(x < SIZE_OF_COL_SCREEN);
 		assert(y >= 0);
 		assert(y < SIZE_OF_ROW_SCREEN);
 	}
