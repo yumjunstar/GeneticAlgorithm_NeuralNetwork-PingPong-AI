@@ -20,7 +20,7 @@ void GeneticAlgorithm::init(size_t blades_count)
 	if (nn) delete[] nn;
 	nn = new NeuralNetwork[blades_count];
 	for (int i = 0; i < blades_count; i++) {
-		int neural[] = { 5, 3 };
+		int neural[] = { 5, 2 };
 		nn[i].make_neural_network(neural, 2);
 		nn[i].all_weight_reset_random();
 	}
@@ -39,13 +39,13 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가
 
 	bool* KeyUp_Binary_CMD = new bool[all_blades_count];
 	bool* KeyDown_Binary_CMD = new bool[all_blades_count];
-	while (ppg->GetGameTries() <= repeat)
+	size_t GameTries = 0;
+	while (GameTries <= repeat)
 	{
-		//Sleep(100);
+		GameTries = ppg->GetGameTries();
 		ppg->draw_game_layout();
-		ppg->play();
 		ppg->monitor_ball();
-
+		ppg->play();
 
 		AllBladeCoor = ppg->GetAllRightAIBladeCoor();
 		BallCoor = ppg->GetBallCoor();
@@ -61,13 +61,9 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가
 			double blade_x = AllBladeCoor[i].x / (double) SIZE_OF_COL_SCREEN;
 			double blade_y = AllBladeCoor[i].y / (double) SIZE_OF_ROW_SCREEN;
 
-			double input_arr[5] = { ball_x, ball_y, ball_direction, blade_x, blade_y };
+			double input_arr[5] = { ball_x, ball_y, ball_dir, blade_x, blade_y };
 
 			Output_CMD_Array[i] = nn[i].query(input_arr, 5);
-		}
-
-		for (int i = 0; i < all_blades_count; i++) 
-		{
 			switch ((NNOUT_DIRECTION)Output_CMD_Array[i])
 			{
 			case UP:
@@ -88,10 +84,20 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가
 				KeyDown_Binary_CMD[i] = false;
 				break;
 			}
+			//if ((GameTries > 20) || (ppg->GetMaxScoreForLearn() > 15))
+			//{
+
+			//	if (ppg->GetAIBladeScore(i) < (size_t)5)
+			//	{
+			//		KeyUp_Binary_CMD[i] = true;
+			//		KeyDown_Binary_CMD[i] = false;
+			//	}
+			//}
 		}
 		ppg->key_up(KeyUp_Binary_CMD, all_blades_count);
 		ppg->key_down(KeyDown_Binary_CMD, all_blades_count);
 	}
+
 	AllBladeScore = ppg->GetAllBladesScores();
 	delete[] Output_CMD_Array;
 	delete[] KeyDown_Binary_CMD;
@@ -124,7 +130,6 @@ void GeneticAlgorithm::LetsLearn()
 		mutation();
 		apply();
 		ppg->SetGeneration(++Generation);
-
 	}
 
 }

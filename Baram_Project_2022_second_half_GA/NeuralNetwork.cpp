@@ -107,6 +107,7 @@ size_t NeuralNetwork::query(double input_arr[], const int size)
 	Input_Matrix.resize(size, 1);//행이 size, 열이 1개이다.
 	for (int i = 0; i < size; i++) {
 		Input_Matrix(i, 0) = input_arr[i];
+
 	}
 	//복사 과정
 	//Logic
@@ -170,7 +171,7 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 	//열이 1개여야 한다. 그리고 행이 여러게
 	assert(arr.cols() == 1);
 	size_t row_size = arr.rows();
-	double max_value = 0;
+	double max_value = -1;
 	int max_value_index = -1;
 	for (int i = 0; i < row_size; i++)
 	{
@@ -181,4 +182,17 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 		}
 	}
 	return (size_t)max_value_index;
+}
+
+void NeuralNetwork::PrintMatrix(MatrixXd matrix) const
+{
+	for (int j = 0; j < matrix.rows(); j++)
+	{
+		for (int k = 0; k < matrix.cols(); k++)
+		{
+			printf("%lf ", matrix(j, k));
+		}
+		printf("\n");
+	}
+	printf("\n");
 }

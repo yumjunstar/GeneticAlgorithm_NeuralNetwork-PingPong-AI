@@ -41,7 +41,7 @@ bool Blade::is_hit_blade(int check_x, int check_y)
 	int blade_y_range_start = this->y - (blade_size >> 1);
 	int blade_y_range_end = this->y + (blade_size >> 1);
 	assert(blade_y_range_start >= 0);
-	assert(blade_y_range_end <= SIZE_OF_COL_SCREEN - 1);
+	assert(blade_y_range_end < SIZE_OF_ROW_SCREEN);
 	if (check_x == this->x)
 	{
 		if ((check_y <= blade_y_range_end) && (check_y >= blade_y_range_start))

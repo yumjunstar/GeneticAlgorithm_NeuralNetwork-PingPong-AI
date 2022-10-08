@@ -7,14 +7,14 @@
 // Ping_Pong Class
 class PingPong {
 private:
-	static constexpr size_t DELAY_PER_FRAME = 50;
+
 	static constexpr char PLAYER_UP_KEY = 'w';
 	static constexpr char PLAYER_DOWN_KEY = 's';
 
 	static constexpr bool Default_LearnMode = true;
 	static constexpr size_t Default_AI_BladeCount = SIZE_OF_ROW_SCREEN - 10;
 	static constexpr size_t Default_Blade_Speed = 1;
-	static constexpr size_t Default_Blade_Size = 3;
+	static constexpr size_t Default_Blade_Size = 1;
 	static constexpr size_t Default_Ball_Speed = 1;
 	static constexpr size_t Default_CurrentGeneration = 0;
 
@@ -76,7 +76,7 @@ public:
 
 	//모든 탁구채들의 점수 반환
 	vector <size_t> GetAllBladesScores();
-
+	size_t GetAIBladeScore(size_t index);
 	//최대 점수 반환 학습을 위한
 	size_t GetMaxScoreForLearn();
 	//현재 공의 위치 반환

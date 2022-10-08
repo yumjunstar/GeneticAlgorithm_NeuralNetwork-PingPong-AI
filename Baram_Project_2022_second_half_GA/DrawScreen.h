@@ -15,7 +15,7 @@ public:
 	void center_text(string text[], int NumberOfStr, bool Line_Number=true, int Sort_Type=0);//가운데에 글자를 출력해주는 함수
 	//0은 가운데 정렬, -1은 왼쪽 정렬, +1은 오른쪽 정렬
 	//LineNumber은 라인 번호를 표시할지 여부
-	void update_info(int ai_score, int player_score = -1, int gen = -1);
+	void update_info(int GameTries, int ai_score = -1, int player_score = -1, int gen = -1);
 	//player_score이나 ai_score가 -1면 표시 안하기
 private:
 	void hide_cursor();

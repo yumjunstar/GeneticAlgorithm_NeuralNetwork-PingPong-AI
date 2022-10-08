@@ -41,6 +41,6 @@ public:
 	static double sigmoid(double x);
 	static double relu(double x);
 	static size_t max_node_index(MatrixXd arr);
-
+	void PrintMatrix(MatrixXd matrix) const;
 };
 

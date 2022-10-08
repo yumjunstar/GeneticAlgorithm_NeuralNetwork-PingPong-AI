@@ -129,19 +129,24 @@ void DrawScreen::center_text(string text[], int NumberOfStr, bool Line_Number, i
 	}
 }
 
-void DrawScreen::update_info(int ai_score, int player_score, int gen) //점수 표시하기 밑에다가
+void DrawScreen::update_info(int GameTries, int ai_score, int player_score, int gen) //점수 표시하기 밑에다가
 {
 
 
 	gotoxy(0, SIZE_OF_ROW_SCREEN + 1);//내려가고
 	//플레이어 점수 : 10 , AI 점수 : 10 , 세대 : 1
+	if (GameTries >= 0)
+	{
+		printf("시도: %d", GameTries);
+	}
 	if (player_score >= 0) {//점수가 0 이상인 것만 표기
-		printf("플레이어 점수 : %d", player_score);
+		printf(", 플레이어 점수: %d", player_score);
 	}
 	if (ai_score >= 0) {
-		printf(", AI 점수 : %d", ai_score);
+		printf(", AI 점수: %d", ai_score);
 	}
 	if (gen >= 0) {
-		printf(", 세대 : %d", gen);
+		printf(", 세대: %d", gen);
 	}
+	printf("         ");
 }

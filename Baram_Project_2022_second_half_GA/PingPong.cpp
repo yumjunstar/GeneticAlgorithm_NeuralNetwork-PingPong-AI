@@ -82,7 +82,7 @@ PingPong::PingPong(DrawScreen* ds, bool LearnMode, size_t AI_Blade_Count,
 	if (LearnMode) {//학습 모드
 		for (int id = 0; id < RightAIBladeRemainCount; id++) {
 			//Blade(int x, int y, int ID, int size);
-			int pos_y = 1 + (id % (SIZE_OF_ROW_SCREEN - 1));
+			int pos_y = 1 + (id % (SIZE_OF_ROW_SCREEN - 2));
 			Blade* temp = new Blade(right_blade_col_x, pos_y, id, blade_range_y_start, blade_range_y_end, BladeSize, BladeSpeed);
 			blades_right_ai.push_back(temp);
 		}
@@ -142,13 +142,16 @@ void PingPong::draw_game_layout() {
 		Coor blade_right_ai_cor = blades_right_ai[i]->GetBladeCoordinate();
 		map_arr[blade_right_ai_cor.y][blade_right_ai_cor.x] = RIGHT_BLADE_SYMBOL;
 	}
+
+
+
 	if (LearnMode) 
 	{
-		ds_p->update_info(this->LearnMode_MaxAIScore, -1, this->LearnMode_CurrentGeneration);
+		ds_p->update_info(this->GameTries, this->LearnMode_MaxAIScore, -1, this->LearnMode_CurrentGeneration);
 	}
 	else
 	{
-		ds_p->update_info(blades_right_ai[0]->get_score(), blades_left_player->get_score());
+		ds_p->update_info(this->GameTries, blades_right_ai[0]->get_score(), blades_left_player->get_score());
 	}
 
 	ds_p->draw_layout(map_arr, SIZE_OF_ROW_SCREEN);
@@ -163,6 +166,7 @@ void PingPong::play() {
 		
 		if (_kbhit()) { // if any key is pressed : take action
 			char key = _getch(); // get the pressed key character
+			if (key == 'r') ball->randomize_ball_direction();
 			if (key == 't') terminate = true;
 			if (ball->get_ball_direction() == STOP) ball->randomize_ball_direction();
 		}
@@ -216,12 +220,14 @@ void PingPong::monitor_ball() {
 	if (ball_x == RightWall_Coor_x)
 	{
 		GameTries++;
+		//ball->change_ball_direction(ball->get_ball_direction() == UPRIGHT ? UPLEFT : DOWNLEFT);
 		//학습 모드
 		if (LearnMode) 
 		{
 			//학습 모드에서 공을 막지 못해 오른쪽 벽에 공이 닿았을때 게임 다시 시작
 			//공 원 위치, 탁구채 원위치, GameTries 증가
 			ball->reset_ball();
+			if (ball->get_ball_direction() == STOP) ball->randomize_ball_direction();
 			for (int i = 0; i < RightAIBladeRemainCount; i++) blades_right_ai[i]->blade_reset();
 
 		}
@@ -231,15 +237,18 @@ void PingPong::monitor_ball() {
 			//경쟁 모드일때 AI가 공을 치지 못하고 오른쪽 벽에 닿으면 상대편(player) 점수 올리고 초기화
 			increment_score(blades_left_player);
 		}
-		ball->change_ball_direction(ball->get_ball_direction() == UPRIGHT ? UPLEFT : DOWNLEFT);
+
 	}
 	//increment_score(player_1);
 
 	// if ball hits left wall --> ai wins
 	if (ball_x == LeftWall_Coor_x)
 	{
-
-		if (!LearnMode)
+		if (LearnMode)
+		{
+			ball->change_ball_direction(ball->get_ball_direction() == UPLEFT ? UPRIGHT : DOWNRIGHT);
+		}
+		else
 		{
 			GameTries++;
 			//경쟁 모드일때는 BLADE 갯수가 반드시 한개여야 한다.
@@ -247,8 +256,9 @@ void PingPong::monitor_ball() {
 
 			//경쟁 모드일때 플레이어가 공을 막지 못해 왼쪽 벽에 닿았을때 상대편(ai) 점수를 올리고 위치 초기화
 			increment_score(blades_right_ai[0]);
+
 		}
-		ball->change_ball_direction(ball->get_ball_direction() == UPLEFT ? UPRIGHT : DOWNRIGHT);
+
 	}
 
 	//공이 탁구채에 부딪친 경우에 대해서 설정한다.
@@ -306,7 +316,7 @@ size_t PingPong::CurrentBladeCount()
 Coor PingPong::GetLeftPlayerBladeCoor()
 {
 	assert(!LearnMode);
-	Coor loc;
+	Coor loc = {};
 	if (blades_left_player)
 	{
 		loc = blades_left_player->GetBladeCoordinate();
@@ -332,6 +342,11 @@ vector<size_t> PingPong::GetAllBladesScores()
 		temp.push_back(blades_right_ai[i]->get_score());
 	}
 	return temp;
+}
+size_t PingPong::GetAIBladeScore(size_t index)
+{
+	assert(index < RightAIBladeRemainCount);
+	return blades_right_ai[index]->get_score();
 }
 //void PingPong::GetAllBladesCoor(pair<int, int>& left_blade_player_coor, pair<int, int> all_right_blade_ai_coor[], int& RightBladeSize)
 //{

@@ -38,8 +38,8 @@
 #define BLANK_ICON "　"
 
 
-#define SIZE_OF_ROW_SCREEN 30
-#define SIZE_OF_COL_SCREEN 50
+#define SIZE_OF_ROW_SCREEN 20
+#define SIZE_OF_COL_SCREEN 40
 
 #define MAX_Y_CAN_GO SIZE_OF_ROW_SCREEN - 2
 #define MIN_Y_CAN_GO 2
@@ -48,7 +48,7 @@
 #define MIN_X_CAN_GO 2
 
 #define DIRECTION_COUNT 7
-
+#define DELAY_PER_FRAME 50
 //배열에 어떤값으로 저장할지 정의 하는 enum
 enum ICON_NUMBER {
 	BLANK_SYMBOL, BALL_SYMBOL, LEFT_BLADE_SYMBOL, RIGHT_BLADE_SYMBOL,
