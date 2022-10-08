@@ -13,15 +13,16 @@ private:
 	int* each_hidden_node_count;
 	int output_node_count;
 
-	static constexpr int DefaultLayerNodeCount[] = {5, 3, 2};
-	static constexpr int DefaultLayerCount = 3;
+	static constexpr int DefaultLayerNodeCount[] = {5, 3, 3};
+	static constexpr int DefaultLayerCount = 5;
 public:
 	NeuralNetwork();
-	NeuralNetwork(int each_layer_node_count[], int all_layer_count);
+	NeuralNetwork(const int each_layer_node_count[], int all_layer_count);
 	~NeuralNetwork();
 
 	//신경망을 만드는 함수
-	void make_neural_network(int each_layer_node_count[], int all_layer_count);
+	void make_neural_network();
+	void make_neural_network(const int each_layer_node_count[], int all_layer_count);
 
 	//신경망에 있는 가중치 값을 설정해주는 함수 단, 현재 신경망의 노드의 개수 크기가 같아야 한다.
 	//저장된 값을 불러와서 설정할때 그리고 가중치 값을 업데이트 할때 사용한다.
@@ -40,5 +41,6 @@ public:
 	static double sigmoid(double x);
 	static double relu(double x);
 	static size_t max_node_index(MatrixXd arr);
+
 };
 

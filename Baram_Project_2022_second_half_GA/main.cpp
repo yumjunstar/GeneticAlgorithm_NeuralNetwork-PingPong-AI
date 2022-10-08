@@ -11,9 +11,8 @@ void init_setting();
 int main(void) {
 	init_setting();
 	DrawScreen *dds = new DrawScreen;
-	GeneticAlgorithm ga(dds, 2);
-	ga.play();
-
+	GeneticAlgorithm ga(dds, 1);
+	ga.LetsLearn();
 	//Menu m(dds);
 	//m.StartMenu();
 	delete dds;

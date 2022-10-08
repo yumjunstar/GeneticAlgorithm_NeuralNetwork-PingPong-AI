@@ -3,13 +3,23 @@
 // constructor 	
 
 PingPong::~PingPong() {
-	if (blades_left_player != nullptr) delete blades_left_player;
-	if (ball != nullptr) delete ball;
+	if (blades_left_player) delete blades_left_player;
+	if (ball) delete ball;
 
 	for (int i = 0; i < blades_right_ai.size(); i++) {
 		if (blades_right_ai[i] != nullptr) delete blades_right_ai[i];
 	}
 
+}
+
+void PingPong::Reset()
+{
+	GameTries = 0;
+	LearnMode_MaxAIScore = 0;
+
+	for (int i = 0; i < RightAIBladeRemainCount; i++) {
+		blades_right_ai[i]->set_score(0);
+	}
 }
 
 PingPong::PingPong(DrawScreen* ds, bool LearnMode, size_t AI_Blade_Count,
@@ -38,10 +48,6 @@ PingPong::PingPong(DrawScreen* ds, bool LearnMode, size_t AI_Blade_Count,
 		this->LearnMode_MaxAIScore = 0;
 
 		//AI Blade의 개수가 화면 크기보다 크면 안되므로 이렇게 설정한다.
-		if (AI_Blade_Count > SIZE_OF_ROW_SCREEN)
-		{
-			AI_Blade_Count = SIZE_OF_ROW_SCREEN - 1;
-		}
 		this->RightAIBladeRemainCount = AI_Blade_Count;
 		this->LeftPlayerBladeRemainCount = 0;
 	}
@@ -106,6 +112,7 @@ void PingPong::increment_score(Blade* player) {
 
 	assert(RightAIBladeRemainCount == 1);
 	blades_right_ai[0]->blade_reset();
+
 	blades_left_player->blade_reset();
 }
 
@@ -318,7 +325,7 @@ vector<Coor> PingPong::GetAllRightAIBladeCoor()
 
 //모든 탁구채들의 점수 반환
 
-inline vector<size_t> PingPong::GetAllBladesScores()
+vector<size_t> PingPong::GetAllBladesScores()
 {
 	vector <size_t> temp;
 	for (int i = 0; i < this->RightAIBladeRemainCount; i++) {
@@ -345,9 +352,24 @@ Coor PingPong::GetBallCoor()
 	return ball->GetBallCoordinate();
 }
 
+Ball_Direction PingPong::GetBallDirection()
+{
+	return ball->get_ball_direction();
+}
+
 size_t PingPong::GetGameTries()
 {
 	return GameTries;
+}
+
+void PingPong::SetGameTries(size_t value)
+{
+	this->GameTries = value;
+}
+
+void PingPong::SetGeneration(size_t gen)
+{
+	this->LearnMode_CurrentGeneration = gen;
 }
 
 void PingPong::key_up(bool objects[], int size)

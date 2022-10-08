@@ -134,7 +134,6 @@ void DrawScreen::update_info(int ai_score, int player_score, int gen) //점수 표�
 
 
 	gotoxy(0, SIZE_OF_ROW_SCREEN + 1);//내려가고
-
 	//플레이어 점수 : 10 , AI 점수 : 10 , 세대 : 1
 	if (player_score >= 0) {//점수가 0 이상인 것만 표기
 		printf("플레이어 점수 : %d", player_score);

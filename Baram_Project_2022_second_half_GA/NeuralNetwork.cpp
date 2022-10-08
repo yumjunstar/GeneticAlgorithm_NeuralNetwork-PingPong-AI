@@ -3,6 +3,8 @@
 //가중치 갯수 초기화 함수를 이용해 초기화 먼저 하고
 //all weight reset random 함수를 쓸 수 있게 한다.
 
+
+
 NeuralNetwork::NeuralNetwork() {
 	matrix_weight_array = nullptr;
 	weight_matrix_count = 0;
@@ -12,13 +14,18 @@ NeuralNetwork::NeuralNetwork() {
 	output_node_count = 0;
 }
 
-NeuralNetwork::NeuralNetwork(int each_layer_node_count[], int all_layer_count) {
+NeuralNetwork::NeuralNetwork(const int each_layer_node_count[], const int all_layer_count) {
 	make_neural_network(each_layer_node_count, all_layer_count);
 }
 
 //가중치 적용 함수
 
-void NeuralNetwork::make_neural_network(int each_layer_node_count[], int all_layer_count) {
+void NeuralNetwork::make_neural_network()
+{
+	make_neural_network(DefaultLayerNodeCount, DefaultLayerCount);
+}
+
+void NeuralNetwork::make_neural_network(const int each_layer_node_count[], const int all_layer_count) {
 	//each_layer_node_count에서 첫번째 레이어와 마지막 레이어는 입력 계층과 출력 계층의 개수이다.
 	assert(all_layer_count >= 2);//최소한 입력 계층과 출력 계층을 포함하여 2개 이상은 되어야 한다.
 
@@ -95,7 +102,7 @@ void NeuralNetwork::all_weight_reset_random()
 size_t NeuralNetwork::query(double input_arr[], const int size) 
 {
 	assert(matrix_weight_array != nullptr && each_hidden_node_count != nullptr);
-	assert(weight_matrix_count == size);
+	assert(input_node_count == size);
 	MatrixXd Input_Matrix;
 	Input_Matrix.resize(size, 1);//행이 size, 열이 1개이다.
 	for (int i = 0; i < size; i++) {
@@ -168,8 +175,8 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 	for (int i = 0; i < row_size; i++)
 	{
 		//i행 1열
-		if (arr(i, 1) > max_value) {
-			max_value = arr(i, 1);
+		if (arr(i, 0) > max_value) {
+			max_value = arr(i, 0);
 			max_value_index = i;
 		}
 	}

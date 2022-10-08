@@ -64,6 +64,7 @@ public:
 		size_t BallSpeed = Default_Ball_Speed);
 	~PingPong();
 
+	void Reset();
 	//살아 있는 탁구채 개수 반환
 	size_t CurrentBladeCount();
 
@@ -81,9 +82,12 @@ public:
 	//현재 공의 위치 반환
 	Coor GetBallCoor();
 
+	Ball_Direction GetBallDirection();
 	//게임 횟수 반환 학습을 위한
 	size_t GetGameTries();
+	void SetGameTries(size_t value);
 
+	void SetGeneration(size_t gen);
 	//탁구채들 위로
 	void key_up(bool objects[], int size);
 
