@@ -7,6 +7,8 @@
 
 NeuralNetwork::NeuralNetwork() {
 	matrix_weight_array = nullptr;
+	each_matrix_cols = nullptr;
+	each_matrix_rows = nullptr;
 	weight_matrix_count = 0;
 	input_node_count = 0;
 	hidden_layer_count = 0;
@@ -33,6 +35,8 @@ void NeuralNetwork::make_neural_network(const int each_layer_node_count[], const
 								 //실행후 할당 뒤에 다시 실행 할 수 있으므로
 	if (matrix_weight_array != nullptr) delete[] matrix_weight_array;
 	if (each_hidden_node_count != nullptr) delete[] each_hidden_node_count;
+	if (each_matrix_rows != nullptr) delete[] each_matrix_rows;
+	if (each_matrix_cols != nullptr) delete[] each_matrix_cols;
 
 
 	each_matrix_rows = new int[weight_matrix_count];
@@ -45,6 +49,7 @@ void NeuralNetwork::make_neural_network(const int each_layer_node_count[], const
 
 	input_node_count = each_layer_node_count[input_layer_pos];
 	output_node_count = each_layer_node_count[output_layer_pos];
+
 	//은닉층의 노드들의 개수만 따로 정리해 둔 것
 	each_hidden_node_count = new int[hidden_layer_count];
 	for (int i = 0; i < hidden_layer_count; i++) {
@@ -62,7 +67,9 @@ void NeuralNetwork::make_neural_network(const int each_layer_node_count[], const
 		matrix_weight_array[i].resize(each_layer_node_count[i + 1], each_layer_node_count[i]);//입력된 크기에 맞게 행렬의 크기를 바꾼다.
 		matrix_weight_array[i].setZero();//0으로 초기화
 		each_matrix_rows[i] = matrix_weight_array[i].rows();
+		assert(each_matrix_rows[i] >= 0);
 		each_matrix_cols[i] = matrix_weight_array[i].cols();
+		assert(each_matrix_cols[i] >= 0);
 	}
 
 	// 처음에 입력 행렬은 행이 5개 열이 1개이다. 5x1
@@ -77,6 +84,8 @@ void NeuralNetwork::make_neural_network(const int each_layer_node_count[], const
 NeuralNetwork::~NeuralNetwork() {
 	if (matrix_weight_array != nullptr) delete[] matrix_weight_array;
 	if (each_hidden_node_count != nullptr) delete[] each_hidden_node_count;
+	if (each_matrix_rows != nullptr) delete[] each_matrix_rows;
+	if (each_matrix_cols != nullptr) delete[] each_matrix_cols;
 }
 
 void NeuralNetwork::set_weight(MatrixXd value[], int size) {
@@ -88,12 +97,10 @@ void NeuralNetwork::set_weight(MatrixXd value[], int size) {
 		int input_cols = value[i].cols();
 		assert(input_rows == each_matrix_rows[i]);
 		assert(input_cols == each_matrix_cols[i]);
-
+		this->matrix_weight_array[i] = value[i];
 
 
 	}
-	//delete[] this->matrix_weight_array;
-	this->matrix_weight_array = value;
 }
 
 void NeuralNetwork::all_weight_reset_random() 
@@ -130,7 +137,7 @@ size_t NeuralNetwork::query(double input_arr[], const int size)
 		//중간 출력 행렬
 		MatrixXd Mid_Put_Matrix = matrix_weight_array[i] * Temp_Input_Matrix;
 
-		Output_Matrix = activation_function(Mid_Put_Matrix, "sigmoid");
+		Output_Matrix = activation_function(Mid_Put_Matrix, "relu");
 		//알아서 크기가 바뀐다.
 		Temp_Input_Matrix = Output_Matrix;
 	}
@@ -176,9 +183,10 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 {
 	//열이 1개여야 한다. 그리고 행이 여러게
 	assert(arr.cols() == 1);
+
 	size_t row_size = arr.rows();
-	double max_value = -1;
-	int max_value_index = -1;
+	double max_value = arr(0, 0);
+	int max_value_index = 0;
 	for (int i = 0; i < row_size; i++)
 	{
 		//i행 1열

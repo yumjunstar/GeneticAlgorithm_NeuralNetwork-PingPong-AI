@@ -11,7 +11,7 @@ void Menu::StartMenu() {
 	string menu_str[] = { "AI 학습 시키기", "학습한 내용을 바탕으로 플레이하기" };
 	ds_p->center_text(menu_str, 2);
 
-	int BladeCount = 10;
+	int BladeCount = 20;
 	PingPong* game_version = nullptr;
 	GeneticAlgorithm* ga = new GeneticAlgorithm(ds_p, BladeCount);
 	int key;

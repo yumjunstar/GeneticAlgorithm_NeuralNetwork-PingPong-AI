@@ -124,7 +124,6 @@ void GeneticAlgorithm::choice()//신경망 고르기
 	MatrixXd* first = DNN_Copy(nn[AllBladeScoreVector[0].ID_index].ReturnAllWeightMatrix(), WeightMatrixCount);
 	MatrixXd* second = DNN_Copy(nn[AllBladeScoreVector[1].ID_index].ReturnAllWeightMatrix(), WeightMatrixCount);
 	//엘리트 두개
-
 	for (int i = 0; i < EliteNeuralWeightMatrixVector.size(); i++)
 	{
 		delete[] EliteNeuralWeightMatrixVector[i];

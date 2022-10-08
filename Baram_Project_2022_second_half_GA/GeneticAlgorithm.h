@@ -10,11 +10,11 @@ class GeneticAlgorithm
 private:
 	// 신경망에서 출력 처음부터 UP과 DOWN과 STOP
 	enum NNOUT_DIRECTION { UP, DOWN, STOP };
-	static constexpr int NeuralShape[] = { 5, 100, 100, 2 };
-	static constexpr int NeuralLayerCount = 4;
+	static constexpr int NeuralShape[] = { 5, 10, 20, 30, 20, 10, 3 };
+	static constexpr int NeuralLayerCount = 7;
 	static constexpr int WeightMatrixCount = NeuralLayerCount - 1;
 	static constexpr int MutationMeanValue = 0;
-	static constexpr int MutationSigmaValue = 5;
+	static constexpr int MutationSigmaValue = 10;
 	static constexpr int PerGenerationGameTries = 100;
 
 
