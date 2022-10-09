@@ -15,7 +15,7 @@ private:
 	static constexpr size_t Default_AI_BladeCount = SIZE_OF_ROW_SCREEN - 10;
 	static constexpr size_t Default_Blade_Speed = 1;
 	static constexpr size_t Default_Blade_Size = 1;
-	static constexpr size_t Default_Ball_Speed = 2;
+	static constexpr size_t Default_Ball_Speed = 1;
 	static constexpr size_t Default_CurrentGeneration = 0;
 
 
@@ -47,11 +47,23 @@ private:
 	//게임 종료 변수
 	bool terminate;
 
+	//거의 도태되는 탁구채는 어떻게 할지 정하기
+	bool HideUnnecessaryBlade;
+
+	//가속모드
+	bool FastMode;
 	//Blade 객체 생성
 	Blade* blades_left_player;
 	vector<Blade*> blades_right_ai;
 	Ball* ball;
 	DrawScreen* ds_p;
+	void LearnMode_WhenBallHitAIBlade(int blade_index);
+	void LearnMode_WhenBallHitRightWall();
+
+	// Incrementing score
+	void CompeteMode_WhenBallHitWall(Blade* player);
+	void ApplySizeInMapArr(ICON_NUMBER map_arr[][SIZE_OF_COL_SCREEN], 
+		ICON_NUMBER Fill_Icon,int start_x, int end_x, int start_y, int end_y);
 public:
 
 	// constructor 학습하는 걸 가정하고 초기화
@@ -75,10 +87,13 @@ public:
 	vector <Coor> GetAllRightAIBladeCoor();
 
 	//모든 탁구채들의 점수 반환
-	vector <Blade_Info> GetAllBladesScores();
+	vector<Blade_Info> GetAllBladesCountinusScoresMAX();
+	vector<Blade_Info> GetAllBladesCurrentScores();
+
 	size_t GetAIBladeScore(size_t index);
 	//최대 점수 반환 학습을 위한
 	size_t GetMaxScoreForLearn();
+	void ClearAllBladesScore();
 	//현재 공의 위치 반환
 	Coor GetBallCoor();
 
@@ -95,8 +110,7 @@ public:
 	//탁구채들 아래로
 	void key_down(bool objects[], int size);
 
-	// Incrementing score
-	void increment_score(Blade* player);
+
 
 	// Drawing the board (at each moment -- this will explain the blips)
 	void draw_game_layout(); // end of Draw function
@@ -110,4 +124,5 @@ public:
 	//게임 시작 
 	void lets_ping_pong();
 	void lets_ping_pong(size_t repeat);
+	bool ShouldWeHideBlade();
 };

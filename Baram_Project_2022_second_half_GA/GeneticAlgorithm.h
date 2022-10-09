@@ -10,11 +10,24 @@ class GeneticAlgorithm
 private:
 	// 신경망에서 출력 처음부터 UP과 DOWN과 STOP
 	enum NNOUT_DIRECTION { UP, DOWN, STOP };
-	static constexpr int NeuralShape[] = { 5, 10, 20, 30, 20, 10, 3 };
-	static constexpr int NeuralLayerCount = 7;
+	static constexpr int NeuralShape[] = { 9, 50, 50, 3 };
+	static constexpr int NeuralLayerCount = 4;
+	//원래는 공의 위치 x,y 탁구채의 위치 x, y, 공의 방향이었다.
+	//공의 x위치
+	//공의 y위치
+	//공의 방향1
+	//공의 방향2
+	//공의 방향3
+	//공의 방향4
+	//공의 방향5
+	//공의 방향6(다꺼지면 stop)
+	//탁구채의 y 위치
+	//
+
 	static constexpr int WeightMatrixCount = NeuralLayerCount - 1;
-	static constexpr int MutationMeanValue = 0;
-	static constexpr int MutationSigmaValue = 10;
+	static constexpr double MutationMeanValue = 0;
+	static constexpr double MutationSigmaValue = 0.01;
+	static constexpr double MutationSigmaValue_BeforeGetScore = 10;
 	static constexpr int PerGenerationGameTries = 100;
 
 
@@ -47,6 +60,7 @@ private:
 	void ChangeRandomDirectionForPerfectLearn(int RepeatLoop);
 	void SetBladeDirection(NNOUT_DIRECTION direction, int blade_id);
 	OneDNNWeights AddNormalDistribution(OneDNNWeights standard);
+	void OneHotEncoding(double input_arr[], int start_index, Ball_Direction dir);
 public:
 	GeneticAlgorithm(DrawScreen* ds, size_t blades_count);
 	~GeneticAlgorithm();

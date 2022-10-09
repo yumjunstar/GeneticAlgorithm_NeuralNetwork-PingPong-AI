@@ -10,6 +10,7 @@ private:
 
 	int blade_size;
 	int id;
+	int CountinusMAXScoreBeforeDeath;
 	int speed;
 	int score;
 	int MoveRangeStart_y;
@@ -26,6 +27,8 @@ public:
 	void blade_move_down();
 	bool is_hit_blade(int check_x, int check_y);
 	// to move balde down
+	int GetCountinusMAXScore();
+	void CountinusMAXScore_SetScore(int score);
 
 	void add_score(int score);
 	void set_score(int score);
@@ -33,4 +36,7 @@ public:
 	int GetID();
 	size_t get_blade_size();
 	Coor GetBladeCoordinate();
+	pair<int, int> GetBladeRange();
 }; // end of Blade class
+
+

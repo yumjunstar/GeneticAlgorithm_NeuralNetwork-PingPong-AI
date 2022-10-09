@@ -16,7 +16,7 @@ NeuralNetwork::NeuralNetwork() {
 	output_node_count = 0;
 }
 
-NeuralNetwork::NeuralNetwork(const int each_layer_node_count[], const int all_layer_count) {
+NeuralNetwork::NeuralNetwork(const int each_layer_node_count[], const int all_layer_count) : NeuralNetwork() {
 	make_neural_network(each_layer_node_count, all_layer_count);
 }
 
@@ -51,9 +51,9 @@ void NeuralNetwork::make_neural_network(const int each_layer_node_count[], const
 	output_node_count = each_layer_node_count[output_layer_pos];
 
 	//은닉층의 노드들의 개수만 따로 정리해 둔 것
-	each_hidden_node_count = new int[hidden_layer_count];
+	this->each_hidden_node_count = new int[hidden_layer_count];
 	for (int i = 0; i < hidden_layer_count; i++) {
-		each_hidden_node_count[i] = each_layer_node_count[i + 1];
+		this->each_hidden_node_count[i] = each_layer_node_count[i + 1];
 	}
 
 
@@ -62,13 +62,13 @@ void NeuralNetwork::make_neural_network(const int each_layer_node_count[], const
 	matrix_weight_array = new MatrixXd[weight_matrix_count];//가중치 행렬의 개수만큼 할당
 
 
-															//각 가중치의 행과 열의 크기는 다음 규칙을 따른다. 행은 뒤 계층에 있는 노드의 개수, 열은 앞 계층에 있는 노드의 개수
+	//각 가중치의 행과 열의 크기는 다음 규칙을 따른다. 행은 뒤 계층에 있는 노드의 개수, 열은 앞 계층에 있는 노드의 개수
 	for (int i = 0; i < weight_matrix_count; i++) {
 		matrix_weight_array[i].resize(each_layer_node_count[i + 1], each_layer_node_count[i]);//입력된 크기에 맞게 행렬의 크기를 바꾼다.
 		matrix_weight_array[i].setZero();//0으로 초기화
-		each_matrix_rows[i] = matrix_weight_array[i].rows();
+		each_matrix_rows[i] = each_layer_node_count[i + 1];//matrix_weight_array[i].rows();
 		assert(each_matrix_rows[i] >= 0);
-		each_matrix_cols[i] = matrix_weight_array[i].cols();
+		each_matrix_cols[i] = each_layer_node_count[i];//matrix_weight_array[i].cols();
 		assert(each_matrix_cols[i] >= 0);
 	}
 
@@ -95,8 +95,9 @@ void NeuralNetwork::set_weight(MatrixXd value[], int size) {
 	for (int i = 0; i < weight_matrix_count; i++) {
 		int input_rows = value[i].rows();
 		int input_cols = value[i].cols();
-		assert(input_rows == each_matrix_rows[i]);
-		assert(input_cols == each_matrix_cols[i]);
+		//assert(input_rows == each_matrix_rows[i]);
+		//assert(input_cols == each_matrix_cols[i]);
+		//대입되니깐 똑같아 진다.
 		this->matrix_weight_array[i] = value[i];
 
 
@@ -119,6 +120,7 @@ size_t NeuralNetwork::query(double input_arr[], const int size)
 	MatrixXd Input_Matrix;
 	Input_Matrix.resize(size, 1);//행이 size, 열이 1개이다.
 	for (int i = 0; i < size; i++) {
+
 		Input_Matrix(i, 0) = input_arr[i];
 
 	}

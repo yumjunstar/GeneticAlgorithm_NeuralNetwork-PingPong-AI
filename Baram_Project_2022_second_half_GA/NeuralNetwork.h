@@ -22,7 +22,7 @@ private:
 	int* each_matrix_rows;
 	int* each_matrix_cols;
 
-	static constexpr int DefaultLayerNodeCount[] = {5, 50, 100, 50, 2};
+	static constexpr int DefaultLayerNodeCount[] = {5, 100, 100, 100, 3};
 	static constexpr int DefaultLayerCount = 5;
 public:
 	NeuralNetwork();

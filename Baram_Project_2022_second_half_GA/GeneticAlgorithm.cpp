@@ -16,7 +16,7 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 	nn = new NeuralNetwork[blades_count];
 	for (int i = 0; i < blades_count; i++) {
 		nn[i].make_neural_network(NeuralShape, NeuralLayerCount);
-		nn[i].all_weight_reset_random();
+		//nn[i].all_weight_reset_random();
 	}
 
 	//변수 초기화
@@ -33,7 +33,7 @@ GeneticAlgorithm::~GeneticAlgorithm()
 }
 void GeneticAlgorithm::CleanUpBladesForVisability(int GameTries, int blade_id)
 {
-	if ((GameTries > 20) || (ppg->GetMaxScoreForLearn() > 15))
+	if (ppg->GetMaxScoreForLearn() > 20)
 	{
 
 		if (ppg->GetAIBladeScore(blade_id) < (size_t)5)
@@ -61,12 +61,47 @@ OneDNNWeights GeneticAlgorithm::DNN_Copy(OneDNNWeights source, int size)
 	}
 	return temp;
 }
+void GeneticAlgorithm::OneHotEncoding(double input_arr[], int start_index, Ball_Direction dir)
+{
+	int end_index = start_index + DIRECTION_COUNT;
+	for (int i = start_index; i < end_index; i++)
+	{
+		input_arr[i] = 0;
+	}
+	switch (dir)
+	{
+	case Ball_Direction::STOP:
+
+		break;
+	case LEFT:
+		input_arr[start_index + LEFT - 1] = 1;
+		break;
+	case UPLEFT:
+		input_arr[start_index + UPLEFT - 1] = 1;
+		break;
+	case DOWNLEFT:
+		input_arr[start_index + DOWNLEFT - 1] = 1;
+		break;
+	case RIGHT:
+		input_arr[start_index + RIGHT - 1] = 1;
+		break;
+	case UPRIGHT:
+		input_arr[start_index + UPRIGHT - 1] = 1;
+		break;
+	case DOWNRIGHT:
+		input_arr[start_index + DOWNRIGHT - 1] = 1;
+		break;
+
+	}
+}
 void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 {
 	//게임을 몇번 플레이 하게 할까
 	//한 세대당 100번 정도 플레이 하게 하기
 
 	//모든 탁구채들의 점수 묶음
+
+	//죽기전 연속 최대 점수 찾기
 
 
 	size_t GameTries = 0;
@@ -82,23 +117,30 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 		//공의 위치와 방향
 		Coor BallCoor = ppg->GetBallCoor();
 		Ball_Direction ball_direction = ppg->GetBallDirection();
-		double ball_x = BallCoor.x / (double)SIZE_OF_COL_SCREEN;
-		double ball_y = BallCoor.y / (double)SIZE_OF_ROW_SCREEN;
-		double ball_dir = (int)ball_direction / (double)DIRECTION_COUNT;
-
+		double input_arr[9] = {};
+		//double ball_x = BallCoor.x / (double)SIZE_OF_COL_SCREEN;
+		//double ball_y = BallCoor.y / (double)SIZE_OF_ROW_SCREEN;
+		//double ball_dir = (int)ball_direction / (double)DIRECTION_COUNT;
+		input_arr[0] = BallCoor.x / (double)SIZE_OF_COL_SCREEN;
+		input_arr[1] = BallCoor.y / (double)SIZE_OF_ROW_SCREEN;
+		OneHotEncoding(input_arr, 2, ball_direction);
 		//모든 탁구채들의 위치 반환
 		AllBladeCoorVector = ppg->GetAllRightAIBladeCoor();
 
 		for (int blade_id = 0; blade_id < AllAIBladesCount; blade_id++)
 		{
-			double blade_x = AllBladeCoorVector[blade_id].x / (double) SIZE_OF_COL_SCREEN;
-			double blade_y = AllBladeCoorVector[blade_id].y / (double) SIZE_OF_ROW_SCREEN;
+			//double blade_x = AllBladeCoorVector[blade_id].x / (double) SIZE_OF_COL_SCREEN;
+			input_arr[8] = AllBladeCoorVector[blade_id].y / (double)SIZE_OF_ROW_SCREEN;
+			
+			//double input_arr[5] = { ball_x, ball_y, ball_dir, blade_x, blade_y };
 
-			double input_arr[5] = { ball_x, ball_y, ball_dir, blade_x, blade_y };
-
-			Output_CMD_Array[blade_id] = nn[blade_id].query(input_arr, 5);
+			Output_CMD_Array[blade_id] = nn[blade_id].query(input_arr, 9);
 			SetBladeDirection((NNOUT_DIRECTION)Output_CMD_Array[blade_id], blade_id);
-			//CleanUpBladesForVisability(GameTries, blade_id);
+			if (ppg->ShouldWeHideBlade())
+			{
+				CleanUpBladesForVisability(GameTries, blade_id);
+			}
+
 
 		}
 		this->ChangeRandomDirectionForPerfectLearn(LoopRepeat);
@@ -108,7 +150,7 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 	}
 
 	//평가된 점수를 저장
-	AllBladeScoreVector = ppg->GetAllBladesScores();
+	AllBladeScoreVector = ppg->GetAllBladesCountinusScoresMAX();
 
 
 
@@ -190,13 +232,14 @@ void GeneticAlgorithm::mutation()//신경망 변이
 
 
 	OneDNNWeights temp = EliteNeuralWeightMatrixVector.back();
+	//printf("%d ", EliteNeuralWeightMatrixVector.size());
 	//맨 뒤에껄 뽑아서
 	for (int i = 0; EliteNeuralWeightMatrixVector.size() < AllAIBladesCount; i++)
 	{
 		OneDNNWeights new_temp = AddNormalDistribution(temp);
 		EliteNeuralWeightMatrixVector.push_back(new_temp);
 	}
-
+	//적어도 학습하려면 4개이상
 
 }
 void GeneticAlgorithm::apply()
@@ -212,7 +255,19 @@ OneDNNWeights GeneticAlgorithm::AddNormalDistribution(OneDNNWeights standard)
 {
 	random_device rd;
 	mt19937_64 mt(rd());
-	normal_distribution<double> d{ 0, 5 };
+	size_t Maximum_Value = ppg->GetMaxScoreForLearn();
+	double sigma = 0;
+	if (Maximum_Value < (size_t)5) 
+	{
+		sigma = this->MutationSigmaValue_BeforeGetScore;
+	}
+	else 
+	{
+		sigma = this->MutationSigmaValue;
+	}
+	normal_distribution<double> d{ this->MutationMeanValue,  sigma};
+	//printf("\n\n\nmin %lf max %lf", (d.min)(), (d.max)());
+	//printf("\nvalue: %lf", d(mt));
 	OneDNNWeights copy_standard = DNN_Copy(standard, WeightMatrixCount);
 	for (int i = 0; i < WeightMatrixCount; i++)
 	{
@@ -225,6 +280,8 @@ OneDNNWeights GeneticAlgorithm::AddNormalDistribution(OneDNNWeights standard)
 				copy_standard[i](j, k) += d(mt);
 			}
 		}
+		
+
 	}
 	return copy_standard;
 }

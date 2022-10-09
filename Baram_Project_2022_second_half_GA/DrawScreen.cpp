@@ -129,7 +129,8 @@ void DrawScreen::center_text(string text[], int NumberOfStr, bool Line_Number, i
 	}
 }
 
-void DrawScreen::update_info(int GameTries, int ai_score, int player_score, int gen) //점수 표시하기 밑에다가
+void DrawScreen::update_info(bool LearnMode, int GameTries, int LearnMode_AI_maxscore,
+	int CompeteMode_RightAIScore, int CompeteMode_LeftPlayerScore, int Gen, bool Acceleration, bool Hide) //점수 표시하기 밑에다가
 {
 
 
@@ -139,14 +140,28 @@ void DrawScreen::update_info(int GameTries, int ai_score, int player_score, int 
 	{
 		printf("Respawn: %d", GameTries);
 	}
-	if (player_score >= 0) {//점수가 0 이상인 것만 표기
-		printf(", Player Score: %d", player_score);
+	if (LearnMode)
+	{
+		if (LearnMode_AI_maxscore >= 0) {
+			printf(", AI Continous MAX Score: %d", LearnMode_AI_maxscore);
+		}
+		if (Gen >= 0) {
+			printf(", Generation: %d", Gen);
+		}
 	}
-	if (ai_score >= 0) {
-		printf(", AI Score: %d", ai_score);
+	else
+	{
+
+		if (CompeteMode_LeftPlayerScore >= 0) {//점수가 0 이상인 것만 표기
+			printf(", Player Score: %d", CompeteMode_LeftPlayerScore);
+		}
+		if (CompeteMode_RightAIScore >= 0) {
+			printf(", AI Score: %d", CompeteMode_RightAIScore);
+		}
 	}
-	if (gen >= 0) {
-		printf(", Generation: %d", gen);
-	}
-	printf("         ");
+
+
+	if (Acceleration) printf(", Accelerating");
+	if (Hide) printf(", Cleaning up blades");
+	printf("                                   ");
 }

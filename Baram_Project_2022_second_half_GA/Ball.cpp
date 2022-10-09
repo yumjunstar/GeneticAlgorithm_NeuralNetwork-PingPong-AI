@@ -50,10 +50,6 @@ Coor Ball::GetBallCoordinate() const {
 void Ball::move_ball() { // x increases along right
 	int sum_x = 0;
 	int sum_y = 0;
-	if (y <= 2)
-	{
-		int a;
-	}
 	switch (direction) { // y increases along bottom
 	case STOP:
 		break;
