@@ -22,16 +22,16 @@ private:
 	int* each_matrix_rows;
 	int* each_matrix_cols;
 
-	static constexpr int DefaultLayerNodeCount[] = {5, 100, 100, 100, 3};
-	static constexpr int DefaultLayerCount = 5;
+	const vector<int> DefaultLayerNodeCount = {5, 100, 100, 100, 3};
+	string ActivationFunction;
 public:
 	NeuralNetwork();
-	NeuralNetwork(const int each_layer_node_count[], int all_layer_count);
+	NeuralNetwork(const vector<int> each_layer_node_count);
 	~NeuralNetwork();
 
 	//신경망을 만드는 함수
 	void make_neural_network();
-	void make_neural_network(const int each_layer_node_count[], int all_layer_count);
+	void make_neural_network(const vector<int> each_layer_node_count);
 
 	//신경망에 있는 가중치 값을 설정해주는 함수 단, 현재 신경망의 노드의 개수 크기가 같아야 한다.
 	//저장된 값을 불러와서 설정할때 그리고 가중치 값을 업데이트 할때 사용한다.
@@ -54,5 +54,6 @@ public:
 
 	MatrixXd* ReturnAllWeightMatrix();
 	int GetWeightMatrixCount();
+	void SetActivationFunction(string function_name);
 };
 

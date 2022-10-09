@@ -36,13 +36,24 @@ inline void Ball::change_ball_speed(int speed) {
 // function to initialize the direction of ball randomely
 
 void Ball::randomize_ball_direction() {
-	direction = (Ball_Direction)((rand() % 6) + 1);
+	direction = (Ball_Direction)((rand() % DIRECTION_COUNT) + 1);
+}
+
+void Ball::randomize_ball_pos()
+{
+	x = rand() % (SIZE_OF_COL_SCREEN - 1) + 1;
+	y = rand() % (SIZE_OF_ROW_SCREEN - 1) + 1;
 }
 
 // function to move ball around the screen
 
 Coor Ball::GetBallCoordinate() const {
 	return Coor({ x, y });
+}
+
+void Ball::SetBallDirection(Ball_Direction dir)
+{
+	direction = dir;
 }
 
 // function to move ball around the screen

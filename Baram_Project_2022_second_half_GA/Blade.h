@@ -29,7 +29,7 @@ public:
 	// to move balde down
 	int GetCountinusMAXScore();
 	void CountinusMAXScore_SetScore(int score);
-
+	void SetRandomizeBlade_InitialYPos();
 	void add_score(int score);
 	void set_score(int score);
 	int get_score();

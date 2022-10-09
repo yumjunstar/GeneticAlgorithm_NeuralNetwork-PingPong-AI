@@ -32,10 +32,13 @@ void Blade::blade_reset() {
 void Blade::blade_move_up() {//일정 한도부터는 못가게 또는 뱅글 뱅글 돌게 해도 괜찮을 것 같은데
 	int sum = y - this->speed;
 	if (sum >= MoveRangeStart_y) y = sum;
+	//else y = MoveRangeEnd_y;
+	//회전해봤지만 탁구의 취지에 안맞는 것 같다 조금만 움직이면 되니깐 금방 학습이 끝난다. 한방향으로만 움직임
 }
 void Blade::blade_move_down() {
 	int sum = y + this->speed;
 	if (sum <= MoveRangeEnd_y) y = sum;
+	//else y = MoveRangeStart_y;
 }
 pair<int, int> Blade::GetBladeRange()
 {
@@ -69,6 +72,11 @@ int Blade::GetCountinusMAXScore()
 void Blade::CountinusMAXScore_SetScore(int score)
 {
 	this->CountinusMAXScoreBeforeDeath = score;
+}
+
+void Blade::SetRandomizeBlade_InitialYPos()
+{
+	initial_y = (rand() % (this->MoveRangeEnd_y - this->MoveRangeStart_y)) + this->MoveRangeStart_y;
 }
 
 // to move balde down

@@ -16,23 +16,25 @@ NeuralNetwork::NeuralNetwork() {
 	output_node_count = 0;
 }
 
-NeuralNetwork::NeuralNetwork(const int each_layer_node_count[], const int all_layer_count) : NeuralNetwork() {
-	make_neural_network(each_layer_node_count, all_layer_count);
+NeuralNetwork::NeuralNetwork(const vector<int> each_layer_node_count) : NeuralNetwork() {
+	make_neural_network(each_layer_node_count);
 }
 
 //가중치 적용 함수
 
 void NeuralNetwork::make_neural_network()
 {
-	make_neural_network(DefaultLayerNodeCount, DefaultLayerCount);
+	make_neural_network(DefaultLayerNodeCount);
 }
 
-void NeuralNetwork::make_neural_network(const int each_layer_node_count[], const int all_layer_count) {
+void NeuralNetwork::make_neural_network(const vector<int> each_layer_node_count) {
 	//each_layer_node_count에서 첫번째 레이어와 마지막 레이어는 입력 계층과 출력 계층의 개수이다.
+	int all_layer_count = each_layer_node_count.size();
 	assert(all_layer_count >= 2);//최소한 입력 계층과 출력 계층을 포함하여 2개 이상은 되어야 한다.
 
-
-								 //실행후 할당 뒤에 다시 실행 할 수 있으므로
+	//기본적인 활성화 함수는 Relu로
+	this->ActivationFunction = "relu";
+	//실행후 할당 뒤에 다시 실행 할 수 있으므로
 	if (matrix_weight_array != nullptr) delete[] matrix_weight_array;
 	if (each_hidden_node_count != nullptr) delete[] each_hidden_node_count;
 	if (each_matrix_rows != nullptr) delete[] each_matrix_rows;
@@ -139,7 +141,7 @@ size_t NeuralNetwork::query(double input_arr[], const int size)
 		//중간 출력 행렬
 		MatrixXd Mid_Put_Matrix = matrix_weight_array[i] * Temp_Input_Matrix;
 
-		Output_Matrix = activation_function(Mid_Put_Matrix, "relu");
+		Output_Matrix = activation_function(Mid_Put_Matrix, this->ActivationFunction);
 		//알아서 크기가 바뀐다.
 		Temp_Input_Matrix = Output_Matrix;
 	}
@@ -185,10 +187,9 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 {
 	//열이 1개여야 한다. 그리고 행이 여러게
 	assert(arr.cols() == 1);
-
-	size_t row_size = arr.rows();
+	int row_size = arr.rows();
 	double max_value = arr(0, 0);
-	int max_value_index = 0;
+	size_t max_value_index = 0;
 	for (int i = 0; i < row_size; i++)
 	{
 		//i행 1열
@@ -197,7 +198,7 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 			max_value_index = i;
 		}
 	}
-	return (size_t)max_value_index;
+	return max_value_index;
 }
 
 void NeuralNetwork::PrintMatrix(MatrixXd matrix) const
@@ -221,4 +222,9 @@ MatrixXd* NeuralNetwork::ReturnAllWeightMatrix()
 int NeuralNetwork::GetWeightMatrixCount()
 {
 	return weight_matrix_count;
+}
+
+void NeuralNetwork::SetActivationFunction(string function_name)
+{
+	this->ActivationFunction = function_name;
 }

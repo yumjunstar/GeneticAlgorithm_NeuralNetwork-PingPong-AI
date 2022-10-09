@@ -39,7 +39,7 @@
 #define BLANK_ICON "　"
 
 
-#define SIZE_OF_ROW_SCREEN 20
+#define SIZE_OF_ROW_SCREEN 60
 #define SIZE_OF_COL_SCREEN 40
 
 #define MAX_Y_CAN_GO SIZE_OF_ROW_SCREEN - 2
@@ -49,7 +49,7 @@
 #define MIN_X_CAN_GO 2
 
 #define DIRECTION_COUNT 6
-#define DELAY_PER_FRAME 20
+#define DELAY_PER_FRAME 30
 //배열에 어떤값으로 저장할지 정의 하는 enum
 enum ICON_NUMBER {
 	BLANK_SYMBOL, BALL_SYMBOL, LEFT_BLADE_SYMBOL, RIGHT_BLADE_SYMBOL,
@@ -65,7 +65,9 @@ struct Blade_Info {
 	int score;
 	size_t ID_index;
 };
+struct Game_Info {
 
+};
 
 using namespace std;
 using namespace Eigen;
