@@ -3,8 +3,8 @@
 This project contains Neural Network and Genetic Algorithm methods
 
 ## First Main Menu
-![start_screen](https://user-images.githubusercontent.com/24960675/194831122-1112a3fe-3fb1-40cc-90a1-f036c840131c.png)
-
+//![start_screen](https://user-images.githubusercontent.com/24960675/194831122-1112a3fe-3fb1-40cc-90a1-f036c840131c.png)
+<img width="80%" src="https://user-images.githubusercontent.com/24960675/194831122-1112a3fe-3fb1-40cc-90a1-f036c840131c.png"/>
 
 ## Learn Mode Screen
 
