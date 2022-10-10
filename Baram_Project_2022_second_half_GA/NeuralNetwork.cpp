@@ -187,6 +187,7 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 {
 	//열이 1개여야 한다. 그리고 행이 여러게
 	assert(arr.cols() == 1);
+	assert(arr.rows() > 0);
 	int row_size = arr.rows();
 	double max_value = arr(0, 0);
 	size_t max_value_index = 0;

@@ -23,6 +23,7 @@ void PingPong::LearnMode_WhenBallHitAIBlade(int blade_index)
 	this->blades_right_ai[blade_index]->add_score(1);
 	int ai_score = this->blades_right_ai[blade_index]->GetCountinusMAXScore();
 	if (ai_score > this->LearnMode_MaxAIScore) this->LearnMode_MaxAIScore = ai_score;
+	//ball->change_ball_direction(ball->get_ball_direction() == UPRIGHT ? UPLEFT : DOWNLEFT);
 	//(Ball_Direction)((rand() % 6) + 1);
 	////enum Ball_Direction { STOP, LEFT, UPLEFT, DOWNLEFT, RIGHT, UPRIGHT, DOWNRIGHT };
 	ball->SetBallDirection((Ball_Direction)((rand()%3) + 1));
@@ -36,7 +37,8 @@ void PingPong::LearnMode_WhenBallHitRightWall()
 	ball->randomize_ball_direction();
 	for (int i = 0; i < RightAIBladeRemainCount; i++) {
 		//탁구채의 위치를 정렬하고 현재 점수를 0으로 초기화 한다. (연속 최대 점수가 있으므로)
-		blades_right_ai[i]->SetRandomizeBlade_InitialYPos();
+		//blades_right_ai[i]->SetRandomizeBlade_InitialYPos();
+		//탁구채의 위치를 랜덤으로 설정하였지만 운에 따라 점수가 결정 되는 듯 해서 처음에 한곳으로 모을려고 한다.
 		blades_right_ai[i]->blade_reset();
 		blades_right_ai[i]->set_score(0);
 	}
@@ -104,8 +106,9 @@ PingPong::PingPong(DrawScreen* ds, bool LearnMode, size_t AI_Blade_Count,
 	int left_blade_col = 0 + 1;
 	if (LearnMode) {//학습 모드
 		for (int id = 0; id < RightAIBladeRemainCount; id++) {
-			//Blade(int x, int y, int ID, int size);
-			int pos_y = rand() % SIZE_OF_ROW_SCREEN;
+			//탁구채의 위치를 랜덤으로 설정하니 점수를 얻는 것도 랜덤처럼 되어 제대로 학습이 되지 않았다.
+			//움직여야 학습 하도록 만드는 것이 모든 탁구채를 모으는 것이다. 같은 기회
+			int pos_y = SIZE_OF_ROW_SCREEN / 2;//;rand() % SIZE_OF_ROW_SCREEN;
 			Blade* temp = new Blade(right_blade_col_x, pos_y, id, blade_range_y_start, blade_range_y_end, BladeSize, BladeSpeed);
 			blades_right_ai.push_back(temp);
 		}

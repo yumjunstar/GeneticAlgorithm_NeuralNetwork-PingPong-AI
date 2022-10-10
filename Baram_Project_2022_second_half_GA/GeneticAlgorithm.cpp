@@ -19,7 +19,7 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 	nn = new NeuralNetwork[blades_count];
 	for (int i = 0; i < blades_count; i++) {
 		nn[i].make_neural_network(NeuralShape);
-		//nn[i].all_weight_reset_random();
+		nn[i].all_weight_reset_random();
 		nn[i].SetActivationFunction("relu");
 	}
 
@@ -112,7 +112,11 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 
 	//죽기전 연속 최대 점수 찾기
 
-
+	//학습을 제대로 할려면 (점수가 안오른다면 ) GameTreis 의 횟수를 올려야 함
+	// 아니면 탁구채의 크기를 늘리던가
+	// 소수로 바꾸니깐 정확도가 너무 낮아서 탁구채가 1인 것으로는 힘든 것 같음
+	// 점수가 1인 것은 탁구채가 아래로 또는 위로만 움직이는 탁구채에게 이동하다가 우연히 친 것일 수도 있으므로
+	// 게임 트라이 횟수를 올리는 것이 좋다.
 	size_t GameTries = 0;
 	while (GameTries < PerGenerationGameTries)
 	{
@@ -127,8 +131,9 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 		Ball_Direction ball_direction = ppg->GetBallDirection();
 
 
-		double input_arr[9] = {((BallCoor.x/(double)SIZE_OF_COL_SCREEN)+0.1)* MultipleNumberForNNInput
-			, ((BallCoor.y/(double)SIZE_OF_ROW_SCREEN)+0.1)* MultipleNumberForNNInput };
+		double input_arr[9] = { (double)BallCoor.x, (double)BallCoor.y };// 실수의 정확도가 떨어져서 정수형으로 넣는게 나을 것 같음
+	//	double input_arr[9] = { ((BallCoor.x / (double)SIZE_OF_COL_SCREEN) + 0.1) * MultipleNumberForNNInput
+	//, ((BallCoor.y / (double)SIZE_OF_ROW_SCREEN) + 0.1) * MultipleNumberForNNInput };
 		OneHotEncoding(input_arr, 2, ball_direction);
 
 
@@ -137,7 +142,7 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 		for (int blade_id = 0; blade_id < AllAIBladesCount; blade_id++)
 		{
 			Coor BladeCoor = AllBladeCoorVector[blade_id];
-			input_arr[8] = (BladeCoor.y/(double)SIZE_OF_ROW_SCREEN + 0.1) * MultipleNumberForNNInput;
+			input_arr[8] = BladeCoor.y;
 			//input_arr[9] = GetDistance(BallCoor.x, BallCoor.y, BladeCoor.x, BladeCoor.y);
 			Output_CMD_Array[blade_id] = nn[blade_id].query(input_arr, InputNodeCount);
 			SetBladeDirection((NNOUT_DIRECTION)Output_CMD_Array[blade_id], blade_id);
@@ -167,7 +172,7 @@ void GeneticAlgorithm::choice()//신경망 고르기
 	//10%의 엘리트 들을 뽑아 그대로 넣는다.
 	//2보다 작을 경우에는 그냥 2개를 뽑는다.
 	
-	int elite_number = ((this->AllAIBladesCount * ChoiceProcessPercentage) < 2) ? 2 : this->AllAIBladesCount * ChoiceProcessPercentage;
+	int elite_number = ((this->AllAIBladesCount * ChoiceProcessPercentage) < 2) ? 2 : (int)this->AllAIBladesCount * ChoiceProcessPercentage;
 
 	//엘리트들만 미리 뽑아 복사 해놓는다. 이전 신경망들은 지울꺼기 때문이다. 아니면 특정 id만 빼고 지울까.
 	vector<OneDNNWeights> elite_dnn;
