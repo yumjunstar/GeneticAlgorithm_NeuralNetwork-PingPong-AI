@@ -6,6 +6,7 @@ This project contains Neural Network and Genetic Algorithm methods
 
 <img width="40%" src="https://user-images.githubusercontent.com/24960675/194831122-1112a3fe-3fb1-40cc-90a1-f036c840131c.png"/>
 
+
 ## Learn Mode Screen
 
 <img width="40%" src="https://user-images.githubusercontent.com/24960675/194830909-0937c07d-3924-4329-9073-643bbc3f7264.png"/>

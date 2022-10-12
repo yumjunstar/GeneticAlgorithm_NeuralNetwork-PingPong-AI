@@ -23,7 +23,7 @@ void PingPong::LearnMode_WhenBallHitAIBlade(int blade_index)
 	this->blades_right_ai[blade_index]->add_score(1);
 	int ai_score = this->blades_right_ai[blade_index]->GetCountinusMAXScore();
 	if (ai_score > this->LearnMode_MaxAIScore) this->LearnMode_MaxAIScore = ai_score;
-	//ball->change_ball_direction(ball->get_ball_direction() == UPRIGHT ? UPLEFT : DOWNLEFT);
+	ball->change_ball_direction(ball->get_ball_direction() == UPRIGHT ? UPLEFT : DOWNLEFT);
 	//(Ball_Direction)((rand() % 6) + 1);
 	////enum Ball_Direction { STOP, LEFT, UPLEFT, DOWNLEFT, RIGHT, UPRIGHT, DOWNRIGHT };
 	ball->SetBallDirection((Ball_Direction)((rand()%3) + 1));

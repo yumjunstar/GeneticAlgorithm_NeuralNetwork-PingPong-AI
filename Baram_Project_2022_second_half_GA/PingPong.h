@@ -17,7 +17,7 @@ private:
 	static constexpr size_t Default_Blade_Size = 1;
 	static constexpr size_t Default_Ball_Speed = 1;
 	static constexpr size_t Default_CurrentGeneration = 0;
-
+	//처음 부터 너무 어렵게 만들면 제대로 학습 안됨
 
 	//학습모드인지 확인
 	bool LearnMode;

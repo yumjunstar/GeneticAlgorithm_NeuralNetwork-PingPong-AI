@@ -39,7 +39,7 @@
 #define BLANK_ICON "¡¡"
 
 
-#define SIZE_OF_ROW_SCREEN 40
+#define SIZE_OF_ROW_SCREEN 50
 #define SIZE_OF_COL_SCREEN 40
 
 #define MAX_Y_CAN_GO SIZE_OF_ROW_SCREEN - 2
