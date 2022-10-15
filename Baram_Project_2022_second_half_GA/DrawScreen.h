@@ -12,7 +12,7 @@ public:
 	}
 	void screen_clear();
 	void draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const int row);
-	void center_text(string text[], int NumberOfStr, bool Line_Number=true, int Sort_Type=0);//가운데에 글자를 출력해주는 함수
+	void center_text(const string text[], int NumberOfStr, bool Line_Number=true, int Sort_Type=0);//가운데에 글자를 출력해주는 함수
 	//0은 가운데 정렬, -1은 왼쪽 정렬, +1은 오른쪽 정렬
 	//LineNumber은 라인 번호를 표시할지 여부
 	void update_info(bool LearnMode, int GameTries, int LearnMode_AI_maxscore = -1,

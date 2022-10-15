@@ -114,7 +114,7 @@ void DrawScreen::hide_cursor(){
 	info.bVisible = FALSE;
 	SetConsoleCursorInfo(consoleHandle, &info);
 }
-void DrawScreen::center_text(string text[], int NumberOfStr, bool Line_Number, int Sort_Type) {
+void DrawScreen::center_text(const string text[], int NumberOfStr, bool Line_Number, int Sort_Type) {
 	
 	assert(SIZE_OF_ROW_SCREEN >= NumberOfStr);
 	int write_row_pos = (SIZE_OF_ROW_SCREEN - NumberOfStr) / 2;

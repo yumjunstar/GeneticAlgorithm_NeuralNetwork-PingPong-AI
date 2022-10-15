@@ -10,12 +10,14 @@ class GeneticAlgorithm
 {
 public:
 	enum NNOUT_DIRECTION { UP, DOWN, STOP };
-	const vector<int> NeuralShape = { 9, 10 , 10, 10, 2 };
+	const vector<int> NeuralShape = { 9, 10, 10, 10, 3 };
 	//2를 사용하면 한쪽에 몰리고 3을 하면 한 곳에만 가만히 있는다.
 	// 유전 알고리즘을 사용하는 것은 큰 신경망에 적합하지 않은 것 같다.
 	// 랜덤 값이 각 값을 크게 바꿔버린다.
 	// 계속 값에 1보다 작은 값을 곱해버리니 뒤로갈 수록 신경망이 약해진다. 소수 정확도가 높거나
 	// 1보다 큰 값을 곱해야 한다.
+
+	//
 	const int InputNodeCount = NeuralShape[0];
 	const int OutputNodeCount = NeuralShape[NeuralShape.size() - 1];
 	const int NeuralLayerCount = NeuralShape.size();
@@ -39,7 +41,17 @@ public:
 
 	//세번째 시도 공과 탁구채와의 거리를 얻기 대각선 거리
 	// 실패 이상하게 한쪽으로 몰린다. 이 값만 커서 그런지
+
+	// 화면의 비율을 적절하게 조정하니 잘 작동한다.
+
+	// 정지 키가 없으면 개체수가 적어도 계속 움직이는 개체가 살아 남는다.
+	// 정치 키가 있으면 보통 가만히 있는 개체가 살아 남게 된다. 움직이면서 탁구공을 치는 것보다 가만히 있는게 더 탁구공을 잘 치는 것 같다.
+	// 현재 탁구채의 위치를 피해서 탁구공을 던져줘야 하나
+
+	// 점수가 같으면 distance가 더 작은 개체를 우선순위로 정렬
 	const int WeightMatrixCount = NeuralLayerCount - 1;
+	static constexpr bool ResetRandomWeights = false;
+	//랜덤으로 설정하지 않는 것이 학습이 더 잘되는 것 같다.
 	static constexpr double MutationMeanValue = 0;
 	static constexpr double MutationSigmaValue = 0.01;
 	static constexpr double MutationSigmaValue_BeforeGetScore = 0.05;
@@ -53,7 +65,7 @@ public:
 	static constexpr int MultipleNumberForNNInput = 1;
 
 
-	static constexpr int GoalScore = 200;
+	static constexpr int GoalScore = 2000000;
 	GeneticAlgorithm(DrawScreen* ds, size_t blades_count);
 	~GeneticAlgorithm();
 

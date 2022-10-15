@@ -7,13 +7,15 @@ Menu::Menu(DrawScreen* ds)
 }
 
 void Menu::StartMenu() {
-	system("cls");
-	string menu_str[] = { "AI 학습 시키기", "학습한 내용을 바탕으로 플레이하기" };
-	ds_p->center_text(menu_str, 2);
+	ds_p->screen_clear();
 
-	int BladeCount = 50;
+	ds_p->center_text(MenuStrs, 2);
+
+	const int BladeCount = 10;
 	PingPong* game_version = nullptr;
 	GeneticAlgorithm* ga = new GeneticAlgorithm(ds_p, BladeCount);
+
+
 	int key;
 	scanf_s("%d", &key);
 	switch (key) {

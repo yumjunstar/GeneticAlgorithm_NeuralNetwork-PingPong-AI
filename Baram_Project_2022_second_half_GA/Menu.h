@@ -6,6 +6,7 @@
 class Menu
 {
 	DrawScreen* ds_p;
+	const string MenuStrs[2] = { "AI 학습 시키기", "학습한 내용을 바탕으로 플레이하기" };
 public:
 	Menu(DrawScreen* ds);
 	void StartMenu();

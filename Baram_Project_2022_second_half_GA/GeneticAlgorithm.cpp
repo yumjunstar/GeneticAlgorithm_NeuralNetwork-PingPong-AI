@@ -19,7 +19,7 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 	nn = new NeuralNetwork[blades_count];
 	for (int i = 0; i < blades_count; i++) {
 		nn[i].make_neural_network(NeuralShape);
-		nn[i].all_weight_reset_random();
+		if (this->ResetRandomWeights) nn[i].all_weight_reset_random();
 		nn[i].SetActivationFunction("relu");
 	}
 
@@ -77,22 +77,22 @@ void GeneticAlgorithm::OneHotEncoding(double input_arr[], int start_index, Ball_
 	case Ball_Direction::STOP:
 		break;
 	case LEFT:
-		input_arr[start_index + LEFT - 1] = 1 * MultipleNumberForNNInput;
+		input_arr[start_index + LEFT - 1] = SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
 		break;
 	case UPLEFT:
-		input_arr[start_index + UPLEFT - 1] = 1 * MultipleNumberForNNInput;
+		input_arr[start_index + UPLEFT - 1] = SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
 		break;
 	case DOWNLEFT:
-		input_arr[start_index + DOWNLEFT - 1] = 1 * MultipleNumberForNNInput;
+		input_arr[start_index + DOWNLEFT - 1] = SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
 		break;
 	case RIGHT:
-		input_arr[start_index + RIGHT - 1] = 1 * MultipleNumberForNNInput;
+		input_arr[start_index + RIGHT - 1] = SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
 		break;
 	case UPRIGHT:
-		input_arr[start_index + UPRIGHT - 1] = 1 * MultipleNumberForNNInput;
+		input_arr[start_index + UPRIGHT - 1] = SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
 		break;
 	case DOWNRIGHT:
-		input_arr[start_index + DOWNRIGHT - 1] = 1 * MultipleNumberForNNInput;
+		input_arr[start_index + DOWNRIGHT - 1] = SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
 		break;
 
 	}

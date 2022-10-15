@@ -21,8 +21,6 @@ private:
 
 	int* each_matrix_rows;
 	int* each_matrix_cols;
-
-	const vector<int> DefaultLayerNodeCount = {5, 100, 100, 100, 3};
 	string ActivationFunction;
 public:
 	NeuralNetwork();
@@ -30,7 +28,6 @@ public:
 	~NeuralNetwork();
 
 	//신경망을 만드는 함수
-	void make_neural_network();
 	void make_neural_network(const vector<int> each_layer_node_count);
 
 	//신경망에 있는 가중치 값을 설정해주는 함수 단, 현재 신경망의 노드의 개수 크기가 같아야 한다.

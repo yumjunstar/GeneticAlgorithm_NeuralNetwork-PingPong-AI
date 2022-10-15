@@ -24,6 +24,7 @@ void init_setting()
 	//멀티 스레딩으로 화면 출력하기
 	srand(time(NULL));
 	char temp[100];
+	
 	sprintf_s(temp, 100, "mode con cols=%d lines=%d | title %s", SIZE_OF_COL_SCREEN + 50, SIZE_OF_ROW_SCREEN + 10, "Ping Pong AI");
 	system(temp);
 }

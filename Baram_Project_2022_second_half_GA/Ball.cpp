@@ -41,7 +41,8 @@ void Ball::randomize_ball_direction() {
 
 void Ball::randomize_ball_pos()
 {
-	x = rand() % (SIZE_OF_COL_SCREEN - 1) + 1;
+	//너무 가까이서 스폰되면 잘못 학습될 가능성
+	x = rand() % (SIZE_OF_COL_SCREEN / 2 - 1) + 1;
 	y = rand() % (SIZE_OF_ROW_SCREEN - 1) + 1;
 }
 

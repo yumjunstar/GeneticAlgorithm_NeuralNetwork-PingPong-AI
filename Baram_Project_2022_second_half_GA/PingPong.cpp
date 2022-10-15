@@ -23,18 +23,21 @@ void PingPong::LearnMode_WhenBallHitAIBlade(int blade_index)
 	this->blades_right_ai[blade_index]->add_score(1);
 	int ai_score = this->blades_right_ai[blade_index]->GetCountinusMAXScore();
 	if (ai_score > this->LearnMode_MaxAIScore) this->LearnMode_MaxAIScore = ai_score;
-	ball->change_ball_direction(ball->get_ball_direction() == UPRIGHT ? UPLEFT : DOWNLEFT);
+
 	//(Ball_Direction)((rand() % 6) + 1);
 	////enum Ball_Direction { STOP, LEFT, UPLEFT, DOWNLEFT, RIGHT, UPRIGHT, DOWNRIGHT };
-	ball->SetBallDirection((Ball_Direction)((rand()%3) + 1));
-	//ball->randomize_ball_direction();
+	if (RandomBallDirection_WhenHitBlade) ball->SetBallDirection((Ball_Direction)((rand()%3) + 1));
+	else ball->change_ball_direction(ball->get_ball_direction() == UPRIGHT ? UPLEFT : DOWNLEFT);
 }
 
 void PingPong::LearnMode_WhenBallHitRightWall()
 {
 	ball->reset_ball();
-	ball->randomize_ball_pos();
-	ball->randomize_ball_direction();
+	if (RandomBallPos_WhenRespawn) ball->randomize_ball_pos();
+	if (RandomBallDirection_WhenRespawn) ball->randomize_ball_direction();
+	else ball->change_ball_direction(DefaultBallDirection_WhenRespawn);
+
+
 	for (int i = 0; i < RightAIBladeRemainCount; i++) {
 		//탁구채의 위치를 정렬하고 현재 점수를 0으로 초기화 한다. (연속 최대 점수가 있으므로)
 		//blades_right_ai[i]->SetRandomizeBlade_InitialYPos();

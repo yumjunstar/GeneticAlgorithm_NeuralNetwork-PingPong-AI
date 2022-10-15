@@ -22,11 +22,6 @@ NeuralNetwork::NeuralNetwork(const vector<int> each_layer_node_count) : NeuralNe
 
 //가중치 적용 함수
 
-void NeuralNetwork::make_neural_network()
-{
-	make_neural_network(DefaultLayerNodeCount);
-}
-
 void NeuralNetwork::make_neural_network(const vector<int> each_layer_node_count) {
 	//each_layer_node_count에서 첫번째 레이어와 마지막 레이어는 입력 계층과 출력 계층의 개수이다.
 	int all_layer_count = each_layer_node_count.size();

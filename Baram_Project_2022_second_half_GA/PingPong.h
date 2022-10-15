@@ -14,10 +14,18 @@ private:
 	static constexpr bool Default_LearnMode = true;
 	static constexpr size_t Default_AI_BladeCount = SIZE_OF_ROW_SCREEN - 10;
 	static constexpr size_t Default_Blade_Speed = 1;
-	static constexpr size_t Default_Blade_Size = 1;
+	static constexpr size_t Default_Blade_Size = 3;
 	static constexpr size_t Default_Ball_Speed = 1;
 	static constexpr size_t Default_CurrentGeneration = 0;
+
+
+	static constexpr bool RandomBallPos_WhenRespawn = true;
+	static constexpr bool RandomBallDirection_WhenRespawn = true;
+	static constexpr Ball_Direction DefaultBallDirection_WhenRespawn = Ball_Direction::RIGHT;
+	static constexpr bool RandomBallDirection_WhenHitBlade = true;
 	//처음 부터 너무 어렵게 만들면 제대로 학습 안됨
+
+
 
 	//학습모드인지 확인
 	bool LearnMode;
