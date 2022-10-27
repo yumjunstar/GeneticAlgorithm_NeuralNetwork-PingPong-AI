@@ -224,9 +224,10 @@ void PingPong::play() {
 			break;
 		case 'h':
 			HideUnnecessaryBlade = !HideUnnecessaryBlade;
-
+		case 'm':
+			break;
 		case 't':
-			terminate = true;
+			terminate = !terminate;
 			break;
 		}
 
@@ -241,6 +242,7 @@ void PingPong::play() {
 
 void PingPong::monitor_ball() {
 	// if ball hits bottom wall
+
 	Coor ball_cor = ball->GetBallCoordinate();
 	int ball_x = ball_cor.x;
 	int ball_y = ball_cor.y;
@@ -249,6 +251,24 @@ void PingPong::monitor_ball() {
 	int TopWall_Coor_y = 0;
 	int RightWall_Coor_x = SIZE_OF_COL_SCREEN - 1;
 	int LeftWall_Coor_x = 0;//MIN_X_CAN_GO;
+
+	static int Position_Move_Times = 0;
+	if (RandomBallDirection_WhenRepeat) 
+	{
+		if (ball_x < SIZE_OF_COL_SCREEN)
+		{
+			Position_Move_Times++;
+			if (Position_Move_Times > 1000)
+			{
+				ball->randomize_ball_direction();
+				ball->randomize_ball_direction();
+				ball->randomize_ball_direction();
+				ball->randomize_ball_direction();
+				ball->randomize_ball_direction();
+				Position_Move_Times = 0;
+			}
+		}
+	}
 
 	// ¹Ù´Ú °æ°è¿¡ ´ê¾ÒÀ»¶§
 	if (ball_y == BottomWall_Coor_y)

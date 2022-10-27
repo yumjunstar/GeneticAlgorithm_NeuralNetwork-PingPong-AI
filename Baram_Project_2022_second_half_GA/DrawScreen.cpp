@@ -133,7 +133,7 @@ void DrawScreen::update_info(bool LearnMode, int GameTries, int LearnMode_AI_max
 	int CompeteMode_RightAIScore, int CompeteMode_LeftPlayerScore, int Gen, bool Acceleration, bool Hide) //점수 표시하기 밑에다가
 {
 
-
+	hide_cursor();
 	gotoxy(0, SIZE_OF_ROW_SCREEN + 1);//내려가고
 	//플레이어 점수 : 10 , AI 점수 : 10 , 세대 : 1
 	if (GameTries >= 0)

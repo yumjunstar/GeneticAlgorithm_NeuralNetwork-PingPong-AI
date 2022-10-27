@@ -1,7 +1,8 @@
 #include "FileManage.h"
 
-void FileManage::OneDNNWeights_IntoFile(int Generation, OneDNNWeights Weights)
+void FileManage::Write_OneDNNWeights_IntoFile(int Generation, OneDNNWeights Weights)
 {
+
 }
 
 OneDNNWeights FileManage::Read_OneDNNWeights_FromFile(int Generation)

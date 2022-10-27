@@ -9,7 +9,7 @@ class Menu
 	const string MenuStrs[2] = { "AI 학습 시키기", "학습한 내용을 바탕으로 플레이하기" };
 public:
 	Menu(DrawScreen* ds);
-	void StartMenu();
+	void StartMenu(const int blade_count = 100);
 };
 
 //학습에 맞게 세팅,

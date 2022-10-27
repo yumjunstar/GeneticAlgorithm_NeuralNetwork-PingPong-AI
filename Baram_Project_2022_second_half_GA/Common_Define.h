@@ -29,8 +29,8 @@
 
 #define USE_2BYTE_CHAR
 #define BALL_ICON "¡Ú"
-#define LEFT_BLADE_ICON "¡«"
-#define RIGHT_BLADE_ICON "¡«"
+#define LEFT_BLADE_ICON "¢¸"
+#define RIGHT_BLADE_ICON "¢º"
 
 #define TOP_WALL_ICON "¢Ë"
 #define BUTTOM_WALL_ICON "¢Ë	"
@@ -39,7 +39,7 @@
 #define BLANK_ICON "¡¡"
 
 
-#define SIZE_OF_ROW_SCREEN 20
+#define SIZE_OF_ROW_SCREEN 40
 #define SIZE_OF_COL_SCREEN 40
 
 #define MAX_Y_CAN_GO SIZE_OF_ROW_SCREEN - 2

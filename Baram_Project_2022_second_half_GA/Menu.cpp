@@ -6,29 +6,26 @@ Menu::Menu(DrawScreen* ds)
 	else ds_p = ds;
 }
 
-void Menu::StartMenu() {
+void Menu::StartMenu(const int BladeCount) {
 	ds_p->screen_clear();
 
 	ds_p->center_text(MenuStrs, 2);
 
-	const int BladeCount = 10;
-	PingPong* game_version = nullptr;
-	GeneticAlgorithm* ga = new GeneticAlgorithm(ds_p, BladeCount);
-
-
 	int key;
 	scanf_s("%d", &key);
-	switch (key) {
-	case 1:
-		//학습 모드
+	if (key == 1) //학습 모드
+	{
+		GeneticAlgorithm* ga = new GeneticAlgorithm(ds_p, BladeCount);
 		ga->LetsLearn();
-		break;
-	case 2:
-		//경쟁 모드
-		game_version = new PingPong(ds_p, false);
+		delete ga;
+	}
+	else if (key == 2) //경쟁 모드
+	{
+
+		PingPong* game_version = new PingPong(ds_p, false);
 		game_version->lets_ping_pong();
-		break;
+		delete game_version;
 	}
 
-	delete game_version;
+
 }

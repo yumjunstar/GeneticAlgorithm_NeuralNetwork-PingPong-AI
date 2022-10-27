@@ -5,7 +5,7 @@ typedef MatrixXd* OneDNNWeights;
 class FileManage
 {
 public:
-	void OneDNNWeights_IntoFile(int Generation, OneDNNWeights Weights);
+	void Write_OneDNNWeights_IntoFile(int Generation, OneDNNWeights Weights);
 	OneDNNWeights Read_OneDNNWeights_FromFile(int Generation);
 	OneDNNWeights Read_OneDNNWeights_FromFile();//√÷Ω≈ Generation
 	void ReadConfig();

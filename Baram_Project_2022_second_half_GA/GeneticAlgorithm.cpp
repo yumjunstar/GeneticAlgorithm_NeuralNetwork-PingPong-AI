@@ -118,7 +118,7 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 	// 점수가 1인 것은 탁구채가 아래로 또는 위로만 움직이는 탁구채에게 이동하다가 우연히 친 것일 수도 있으므로
 	// 게임 트라이 횟수를 올리는 것이 좋다.
 	size_t GameTries = 0;
-	while (GameTries < PerGenerationGameTries)
+	while ((GameTries < PerGenerationGameTries)&& (ppg->GetMaxScoreForLearn() < ForceGoToNextGeneration_ScoreStd))
 	{
 
 		GameTries = ppg->GetGameTries();
