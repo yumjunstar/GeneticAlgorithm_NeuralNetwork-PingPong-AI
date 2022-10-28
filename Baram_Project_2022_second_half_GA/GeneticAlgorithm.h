@@ -2,7 +2,7 @@
 #include "Common_Define.h"
 #include "NeuralNetwork.h"
 #include "PingPong.h"
-
+#include "FileManage.h"
 typedef MatrixXd* OneDNNWeights;
 
 // init->play->choice->crossover->mutation 이 한 세대
@@ -10,7 +10,7 @@ class GeneticAlgorithm
 {
 public:
 	enum NNOUT_DIRECTION { UP, DOWN, STOP };
-	const vector<int> NeuralShape = { 9, 10, 10, 10, 2 };
+	const vector<size_t> NeuralShape = { 9, 10, 10, 10, 2 };
 	//2를 사용하면 한쪽에 몰리고 3을 하면 한 곳에만 가만히 있는다.
 	// 유전 알고리즘을 사용하는 것은 큰 신경망에 적합하지 않은 것 같다.
 	// 랜덤 값이 각 값을 크게 바꿔버린다.
@@ -18,9 +18,9 @@ public:
 	// 1보다 큰 값을 곱해야 한다.
 
 	//
-	const int InputNodeCount = NeuralShape[0];
-	const int OutputNodeCount = NeuralShape[NeuralShape.size() - 1];
-	const int NeuralLayerCount = NeuralShape.size();
+	const size_t InputNodeCount = NeuralShape[0];
+	const size_t OutputNodeCount = NeuralShape[NeuralShape.size() - 1];
+	const size_t NeuralLayerCount = NeuralShape.size();
 	// 이전의 신경망 입력 : 공의 위치 x, y, 탁구채의 위치 x, y, 공의 방향
 	// 이후에 다음 시도
 	// 공의 x위치
@@ -49,8 +49,8 @@ public:
 	// 현재 탁구채의 위치를 피해서 탁구공을 던져줘야 하나
 
 	// 점수가 같으면 distance가 더 작은 개체를 우선순위로 정렬
-	const int WeightMatrixCount = NeuralLayerCount - 1;
-	static constexpr bool ResetRandomWeights = true;
+	const size_t WeightMatrixCount = NeuralLayerCount - 1;
+	static constexpr bool ResetRandomWeights = false;
 	//랜덤으로 설정하지 않는 것이 학습이 더 잘되는 것 같다.
 	static constexpr double MutationMeanValue = 0;
 	static constexpr double MutationSigmaValue = 0.01;
@@ -63,10 +63,11 @@ public:
 
 	static constexpr size_t CleanUpStartScore = 20;
 	static constexpr size_t CleanUpMinimumScore = 5;
+	//신경망 입력에 배수
 	static constexpr int MultipleNumberForNNInput = 1;
 
-	static constexpr int ForceGoToNextGeneration_ScoreStd = 20;
-	static constexpr int GoalScore = 100000;
+	static constexpr size_t ForceGoToNextGeneration_ScoreStd = 100;
+	static constexpr size_t GoalScore = 100000;
 	GeneticAlgorithm(DrawScreen* ds, size_t blades_count);
 	~GeneticAlgorithm();
 
@@ -102,8 +103,8 @@ private:
 
 
 
-	OneDNNWeights DNN_Copy(OneDNNWeights source, int size);
-	void CleanUpBladesForVisability(int GameTries, int blade_id);
+	OneDNNWeights DNN_Copy(OneDNNWeights source, size_t size);
+	void CleanUpBladesForVisability(size_t GameTries, int blade_id);
 	void SetBladeDirection(NNOUT_DIRECTION direction, int blade_id);
 	OneDNNWeights AddNormalDistribution(OneDNNWeights standard);
 	void ChangeRandomDirectionForPerfectLearn(int ball_x, int RepeatLoop);

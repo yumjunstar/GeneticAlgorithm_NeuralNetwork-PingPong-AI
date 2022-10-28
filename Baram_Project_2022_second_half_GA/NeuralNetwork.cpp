@@ -16,40 +16,47 @@ NeuralNetwork::NeuralNetwork() {
 	output_node_count = 0;
 }
 
-NeuralNetwork::NeuralNetwork(const vector<int> each_layer_node_count) : NeuralNetwork() {
+NeuralNetwork::NeuralNetwork(const vector<size_t> each_layer_node_count) : NeuralNetwork() {
 	make_neural_network(each_layer_node_count);
 }
 
 //가중치 적용 함수
 
-void NeuralNetwork::make_neural_network(const vector<int> each_layer_node_count) {
+void NeuralNetwork::make_neural_network(const vector<size_t> each_layer_node_count) {
 	//each_layer_node_count에서 첫번째 레이어와 마지막 레이어는 입력 계층과 출력 계층의 개수이다.
-	int all_layer_count = each_layer_node_count.size();
-	assert(all_layer_count >= 2);//최소한 입력 계층과 출력 계층을 포함하여 2개 이상은 되어야 한다.
+	size_t all_layer_count = each_layer_node_count.size();
+	assert(all_layer_count >= (size_t)2);//최소한 입력 계층과 출력 계층을 포함하여 2개 이상은 되어야 한다.
 
 	//기본적인 활성화 함수는 Relu로
 	this->ActivationFunction = "relu";
+
+
 	//실행후 할당 뒤에 다시 실행 할 수 있으므로
-	if (matrix_weight_array != nullptr) delete[] matrix_weight_array;
-	if (each_hidden_node_count != nullptr) delete[] each_hidden_node_count;
-	if (each_matrix_rows != nullptr) delete[] each_matrix_rows;
-	if (each_matrix_cols != nullptr) delete[] each_matrix_cols;
+	//if (matrix_weight_array != nullptr) delete[] matrix_weight_array;
+	//if (each_hidden_node_count != nullptr) delete[] each_hidden_node_count;
+	//if (each_matrix_rows != nullptr) delete[] each_matrix_rows;
+	//if (each_matrix_cols != nullptr) delete[] each_matrix_cols;
 
 
-	each_matrix_rows = new int[weight_matrix_count];
-	each_matrix_cols = new int[weight_matrix_count];
-
+	each_matrix_rows = new size_t[weight_matrix_count];
+	each_matrix_cols = new size_t[weight_matrix_count];
+	assert(each_matrix_cols);
+	assert(each_matrix_cols);
+	//할당 확인
+	// 
 	//입력 행렬 * 가중치 행렬 = 출력 행렬
-	int input_layer_pos = 0;
-	int output_layer_pos = all_layer_count - 1;
+	size_t input_layer_pos = 0;
+	size_t output_layer_pos = all_layer_count - 1;
 	hidden_layer_count = all_layer_count - 2;
 
 	input_node_count = each_layer_node_count[input_layer_pos];
 	output_node_count = each_layer_node_count[output_layer_pos];
 
 	//은닉층의 노드들의 개수만 따로 정리해 둔 것
-	this->each_hidden_node_count = new int[hidden_layer_count];
+	this->each_hidden_node_count = new size_t[hidden_layer_count];
+	assert(this->each_hidden_node_count);
 	for (int i = 0; i < hidden_layer_count; i++) {
+		assert((i + 1) < each_layer_node_count.size());
 		this->each_hidden_node_count[i] = each_layer_node_count[i + 1];
 	}
 
@@ -57,14 +64,16 @@ void NeuralNetwork::make_neural_network(const vector<int> each_layer_node_count)
 	//가중치 행렬의 개수는 항상 모든 레이어의 개수에서 한개를 뺀 값이다.
 	weight_matrix_count = all_layer_count - 1;
 	matrix_weight_array = new MatrixXd[weight_matrix_count];//가중치 행렬의 개수만큼 할당
-
+	assert(matrix_weight_array);
 
 	//각 가중치의 행과 열의 크기는 다음 규칙을 따른다. 행은 뒤 계층에 있는 노드의 개수, 열은 앞 계층에 있는 노드의 개수
 	for (int i = 0; i < weight_matrix_count; i++) {
 		matrix_weight_array[i].resize(each_layer_node_count[i + 1], each_layer_node_count[i]);//입력된 크기에 맞게 행렬의 크기를 바꾼다.
 		matrix_weight_array[i].setZero();//0으로 초기화
+		assert((i + 1) < each_layer_node_count.size());
 		each_matrix_rows[i] = each_layer_node_count[i + 1];//matrix_weight_array[i].rows();
 		assert(each_matrix_rows[i] >= 0);
+		assert((i) < each_layer_node_count.size());
 		each_matrix_cols[i] = each_layer_node_count[i];//matrix_weight_array[i].cols();
 		assert(each_matrix_cols[i] >= 0);
 	}
@@ -79,13 +88,13 @@ void NeuralNetwork::make_neural_network(const vector<int> each_layer_node_count)
 }
 
 NeuralNetwork::~NeuralNetwork() {
-	if (matrix_weight_array != nullptr) delete[] matrix_weight_array;
-	if (each_hidden_node_count != nullptr) delete[] each_hidden_node_count;
-	if (each_matrix_rows != nullptr) delete[] each_matrix_rows;
-	if (each_matrix_cols != nullptr) delete[] each_matrix_cols;
+	/*if (matrix_weight_array != nullptr)*/ delete[] matrix_weight_array;
+	/*if (each_hidden_node_count != nullptr)*/ delete[] each_hidden_node_count;
+	/*if (each_matrix_rows != nullptr)*/ delete[] each_matrix_rows;
+	/*if (each_matrix_cols != nullptr)*/ delete[] each_matrix_cols;
 }
 
-void NeuralNetwork::set_weight(MatrixXd value[], int size) {
+void NeuralNetwork::set_weight(MatrixXd value[], size_t size) {
 	assert(matrix_weight_array != nullptr && each_hidden_node_count != nullptr);//행렬이 설정된 상태에서만 진행 되어야 한다.
 																				//이미 초기화때 설정을 완료하고 weight 값들만 바꾸는 것이므로 따로 개수를 받아올 필요가 없다.
 	assert(weight_matrix_count == size);
@@ -105,7 +114,7 @@ void NeuralNetwork::all_weight_reset_random()
 {
 	//미리 make_neural_network를 통해 크기가 정해진 뒤에 사용해야 한다.
 	assert(matrix_weight_array != nullptr && each_hidden_node_count != nullptr);
-	for (int i = 0; i < weight_matrix_count; i++) {
+	for (size_t i = 0; i < weight_matrix_count; i++) {
 		this->matrix_weight_array[i].setRandom();
 	}
 }
@@ -130,7 +139,7 @@ size_t NeuralNetwork::query(double input_arr[], const int size)
 
 	MatrixXd Output_Matrix;
 	//처음부터 입력값과 가중치를 곱하고 그 뒤에 다시 노드들의 값을 곱하고 이런식으로 진행 된다.
-	for (int i = 0; i < weight_matrix_count; i++) {
+	for (size_t i = 0; i < weight_matrix_count; i++) {
 		//서로 행렬곱을 해야 하므로 반드시 열과 행이 같아야 한다.
 		assert(matrix_weight_array[i].cols() == Temp_Input_Matrix.rows());
 		//중간 출력 행렬
@@ -183,10 +192,10 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 	//열이 1개여야 한다. 그리고 행이 여러게
 	assert(arr.cols() == 1);
 	assert(arr.rows() > 0);
-	int row_size = arr.rows();
+	size_t row_size = arr.rows();
 	double max_value = arr(0, 0);
 	size_t max_value_index = 0;
-	for (int i = 0; i < row_size; i++)
+	for (size_t i = 0; i < row_size; i++)
 	{
 		//i행 1열
 		if (arr(i, 0) > max_value) {
@@ -215,7 +224,7 @@ MatrixXd* NeuralNetwork::ReturnAllWeightMatrix()
 	return matrix_weight_array;
 }
 
-int NeuralNetwork::GetWeightMatrixCount()
+size_t NeuralNetwork::GetWeightMatrixCount()
 {
 	return weight_matrix_count;
 }

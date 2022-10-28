@@ -18,8 +18,10 @@ void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const 
 		}
 
 		prv_arr = new int* [row];
+		assert(prv_arr);
 		for (int k = 0; k < row; k++) {
 			prv_arr[k] = new int[SIZE_OF_COL_SCREEN];
+			assert(prv_arr[k]);
 		}
 
 

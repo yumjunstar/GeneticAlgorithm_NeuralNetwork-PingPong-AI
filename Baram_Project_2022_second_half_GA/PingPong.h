@@ -118,10 +118,10 @@ public:
 
 	void SetGeneration(size_t gen);
 	//탁구채들 위로
-	void key_up(bool objects[], int size);
+	void key_up(bool objects[], size_t size);
 
 	//탁구채들 아래로
-	void key_down(bool objects[], int size);
+	void key_down(bool objects[], size_t size);
 
 
 

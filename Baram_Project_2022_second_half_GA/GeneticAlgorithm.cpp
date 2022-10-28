@@ -9,14 +9,18 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 	this->ds_p = ds;
 	this->AllAIBladesCount = blades_count;
 	this->ppg = new PingPong(ds, true, blades_count);
+	assert(ppg);
 	LoopRepeat = 0;
 
 	Output_CMD_Array = new size_t[AllAIBladesCount];
 	KeyUp_Binary_CMD = new bool[AllAIBladesCount];
 	KeyDown_Binary_CMD = new bool[AllAIBladesCount];
-
+	assert(Output_CMD_Array);
+	assert(KeyUp_Binary_CMD);
+	assert(KeyDown_Binary_CMD);
 	//신경망 생성
 	nn = new NeuralNetwork[blades_count];
+	assert(nn);
 	for (int i = 0; i < blades_count; i++) {
 		nn[i].make_neural_network(NeuralShape);
 		if (this->ResetRandomWeights) nn[i].all_weight_reset_random();
@@ -35,7 +39,7 @@ GeneticAlgorithm::~GeneticAlgorithm()
 	delete[] nn;
 	delete ppg;
 }
-void GeneticAlgorithm::CleanUpBladesForVisability(int GameTries, int blade_id)
+void GeneticAlgorithm::CleanUpBladesForVisability(size_t GameTries, int blade_id)
 {
 	if (ppg->GetMaxScoreForLearn() > CleanUpStartScore)
 	{
@@ -55,11 +59,12 @@ void GeneticAlgorithm::init()
 	AllBladeScoreVector.clear();
 
 }
-OneDNNWeights GeneticAlgorithm::DNN_Copy(OneDNNWeights source, int size)
+OneDNNWeights GeneticAlgorithm::DNN_Copy(OneDNNWeights source, size_t size)
 {
 	assert(size == WeightMatrixCount);
 	OneDNNWeights temp = new MatrixXd[size];
-	for (int i = 0; i < size; i++)
+	assert(temp);
+	for (size_t i = 0; i < size; i++)
 	{
 		temp[i] = source[i];
 	}
@@ -172,21 +177,24 @@ void GeneticAlgorithm::choice()//신경망 고르기
 	//10%의 엘리트 들을 뽑아 그대로 넣는다.
 	//2보다 작을 경우에는 그냥 2개를 뽑는다.
 	
-	int elite_number = ((this->AllAIBladesCount * ChoiceProcessPercentage) < 2) ? 2 : (int)this->AllAIBladesCount * ChoiceProcessPercentage;
+	size_t elite_number = ((this->AllAIBladesCount * ChoiceProcessPercentage) < 2) ? 2 : (size_t)(this->AllAIBladesCount * ChoiceProcessPercentage);
 
 	//엘리트들만 미리 뽑아 복사 해놓는다. 이전 신경망들은 지울꺼기 때문이다. 아니면 특정 id만 빼고 지울까.
 	vector<OneDNNWeights> elite_dnn;
-	for (int i = 0; i < elite_number; i++) 
+	for (size_t i = 0; i < elite_number; i++) 
 	{
+		//DNN_Copy는 신경망 하나를 DeepCopy 하는 함수이다. 이를 pushback 해서 다음 세대를 위해 채운다.
+		//순서대로 push 한다. 점수가 가장 높은게 top 에 위치한다.
 		elite_dnn.push_back(DNN_Copy(nn[AllBladeScoreVector[i].ID_index].ReturnAllWeightMatrix(), WeightMatrixCount));
 	}
 
 	//엘리트 두개
-	for (int i = 0; i < EliteNeuralWeightMatrixVector.size(); i++)
+	for (size_t i = 0; i < EliteNeuralWeightMatrixVector.size(); i++)
 	{
 		delete[] EliteNeuralWeightMatrixVector[i];
 	}
 	EliteNeuralWeightMatrixVector.clear();
+	//벡터이므로 하나하나 할당 해제 하고 삭제
 	EliteNeuralWeightMatrixVector = elite_dnn;
 	//포인터를 사용하여 걱정하였으나 중간에 할당 해제 과정없이 Setweight 만 하면 되므로 메모리 누수 걱정은 하지 않아도 된다.
 	//점수들 중에서 가장 높은거 두개
@@ -208,7 +216,7 @@ void GeneticAlgorithm::SetBladeDirection(NNOUT_DIRECTION dir, int blade_id)
 		KeyDown_Binary_CMD[blade_id] = false;
 		break;
 	default:
-		printf("경고 GeneticAlgorithm.cpp::play\n");
+		printf("경고 GeneticAlgorithm.cpp::SetDirection\n");
 		KeyUp_Binary_CMD[blade_id] = false;
 		KeyDown_Binary_CMD[blade_id] = false;
 		break;
@@ -218,7 +226,7 @@ void GeneticAlgorithm::crossover()//신경망 교차
 {
 	//한개의 신경망을 위한 가중치들의 묶음 값이다.
 	MatrixXd* EliteWeightCrossOverForOneNN = new MatrixXd[WeightMatrixCount];
-
+	assert(EliteWeightCrossOverForOneNN);
 
 
 	//엘리트 가중치 묶음의 묶음 개수 vector<MatrixXd*>
@@ -226,7 +234,7 @@ void GeneticAlgorithm::crossover()//신경망 교차
 	//엘리트 가중치끼리 다 더해서 평균을 낼 것이다.
 	//엘리트 가중치 1개 -> 여러개의 행렬 덧셈
 
-	for (int i = 0; i < WeightMatrixCount; ++i)
+	for (size_t i = 0; i < WeightMatrixCount; ++i)
 	{
 		EliteWeightCrossOverForOneNN[i] = (EliteNeuralWeightMatrixVector[0][i] + EliteNeuralWeightMatrixVector[1][i]) / 2.;
 	}
@@ -238,8 +246,8 @@ void GeneticAlgorithm::mutation()//신경망 변이
 {
 
 
-	OneDNNWeights temp = EliteNeuralWeightMatrixVector.back(); 
-	for (int i = 0; EliteNeuralWeightMatrixVector.size() < AllAIBladesCount; i++)
+	OneDNNWeights temp = EliteNeuralWeightMatrixVector.back();
+	for (size_t i = 0; EliteNeuralWeightMatrixVector.size() < AllAIBladesCount; i++)
 	{
 		OneDNNWeights new_temp = AddNormalDistribution(temp);
 		EliteNeuralWeightMatrixVector.push_back(new_temp);
@@ -249,9 +257,9 @@ void GeneticAlgorithm::mutation()//신경망 변이
 }
 void GeneticAlgorithm::apply()
 {
-	int SonCount = EliteNeuralWeightMatrixVector.size();
+	size_t SonCount = EliteNeuralWeightMatrixVector.size();
 	assert(SonCount == AllAIBladesCount);
-	for (int i = 0; i < SonCount; i++)
+	for (size_t  i = 0; i < SonCount; i++)
 	{
 		nn[i].set_weight(EliteNeuralWeightMatrixVector[i], WeightMatrixCount);
 	}
@@ -271,13 +279,13 @@ OneDNNWeights GeneticAlgorithm::AddNormalDistribution(OneDNNWeights standard)
 	OneDNNWeights copy_standard = DNN_Copy(standard, WeightMatrixCount);
 
 
-	for (int i = 0; i < WeightMatrixCount; i++)
+	for (size_t i = 0; i < WeightMatrixCount; i++)
 	{
-		int rows = copy_standard[i].rows();
-		int	cols = copy_standard[i].cols();
-		for (int j = 0; j < rows; j++)
+		size_t rows = (size_t)copy_standard[i].rows();
+		size_t cols = (size_t)copy_standard[i].cols();
+		for (size_t j = 0; j < rows; j++)
 		{
-			for (int k = 0; k < cols; k++)
+			for (size_t k = 0; k < cols; k++)
 			{
 				copy_standard[i](j, k) += d(mt);
 			}
@@ -297,6 +305,7 @@ void GeneticAlgorithm::ChangeRandomDirectionForPerfectLearn(int ball_x, int Repe
 }
 void GeneticAlgorithm::LetsLearn()
 {
+	FileManage fm;
 	while (true)
 	{
 		ppg->Reset();
@@ -309,6 +318,7 @@ void GeneticAlgorithm::LetsLearn()
 		crossover();
 		mutation();
 		apply();
+		fm.Write_Statistics(Generation, ppg->GetMaxScoreForLearn());
 		ppg->SetGeneration(++Generation);
 	}
 

@@ -2,7 +2,11 @@
 
 Menu::Menu(DrawScreen* ds)
 {
-	if (ds == (DrawScreen*)nullptr) ds_p = new DrawScreen;
+	if (ds == (DrawScreen*)nullptr) {
+		ds_p = new DrawScreen;
+		assert(ds_p);
+	}
+
 	else ds_p = ds;
 }
 
@@ -16,6 +20,7 @@ void Menu::StartMenu(const int BladeCount) {
 	if (key == 1) //학습 모드
 	{
 		GeneticAlgorithm* ga = new GeneticAlgorithm(ds_p, BladeCount);
+		assert(ga);
 		ga->LetsLearn();
 		delete ga;
 	}
@@ -23,6 +28,7 @@ void Menu::StartMenu(const int BladeCount) {
 	{
 
 		PingPong* game_version = new PingPong(ds_p, false);
+		assert(game_version);
 		game_version->lets_ping_pong();
 		delete game_version;
 	}
