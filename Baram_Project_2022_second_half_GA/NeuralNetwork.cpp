@@ -23,31 +23,37 @@ NeuralNetwork::NeuralNetwork(const vector<size_t> each_layer_node_count) : Neura
 //가중치 적용 함수
 
 void NeuralNetwork::make_neural_network(const vector<size_t> each_layer_node_count) {
+	//실행후 할당 뒤에 다시 실행 할 수 있으므로
+//if (matrix_weight_array != nullptr) delete[] matrix_weight_array;
+//if (each_hidden_node_count != nullptr) delete[] each_hidden_node_count;
+//if (each_matrix_rows != nullptr) delete[] each_matrix_rows;
+//if (each_matrix_cols != nullptr) delete[] each_matrix_cols;
+
+		//기본적인 활성화 함수는 Relu로
+	this->ActivationFunction = "relu";
+
 	//each_layer_node_count에서 첫번째 레이어와 마지막 레이어는 입력 계층과 출력 계층의 개수이다.
 	size_t all_layer_count = each_layer_node_count.size();
 	assert(all_layer_count >= (size_t)2);//최소한 입력 계층과 출력 계층을 포함하여 2개 이상은 되어야 한다.
 
-	//기본적인 활성화 함수는 Relu로
-	this->ActivationFunction = "relu";
-
-
-	//실행후 할당 뒤에 다시 실행 할 수 있으므로
-	//if (matrix_weight_array != nullptr) delete[] matrix_weight_array;
-	//if (each_hidden_node_count != nullptr) delete[] each_hidden_node_count;
-	//if (each_matrix_rows != nullptr) delete[] each_matrix_rows;
-	//if (each_matrix_cols != nullptr) delete[] each_matrix_cols;
-
-
-	each_matrix_rows = new size_t[weight_matrix_count];
-	each_matrix_cols = new size_t[weight_matrix_count];
-	assert(each_matrix_cols);
-	assert(each_matrix_cols);
+	//가중치 행렬의 개수는 항상 모든 레이어의 개수에서 한개를 뺀 값이다.
+	weight_matrix_count = all_layer_count - 1;
 	//할당 확인
 	// 
 	//입력 행렬 * 가중치 행렬 = 출력 행렬
 	size_t input_layer_pos = 0;
 	size_t output_layer_pos = all_layer_count - 1;
 	hidden_layer_count = all_layer_count - 2;
+
+	matrix_weight_array = new MatrixXd[weight_matrix_count];//가중치 행렬의 개수만큼 할당
+	assert(matrix_weight_array);
+	assert(_CrtCheckMemory());
+
+	each_matrix_rows = new size_t[weight_matrix_count];
+	each_matrix_cols = new size_t[weight_matrix_count];
+	assert(each_matrix_cols);
+	assert(each_matrix_cols);
+
 
 	input_node_count = each_layer_node_count[input_layer_pos];
 	output_node_count = each_layer_node_count[output_layer_pos];
@@ -61,23 +67,24 @@ void NeuralNetwork::make_neural_network(const vector<size_t> each_layer_node_cou
 	}
 
 
-	//가중치 행렬의 개수는 항상 모든 레이어의 개수에서 한개를 뺀 값이다.
-	weight_matrix_count = all_layer_count - 1;
-	matrix_weight_array = new MatrixXd[weight_matrix_count];//가중치 행렬의 개수만큼 할당
-	assert(matrix_weight_array);
 
 	//각 가중치의 행과 열의 크기는 다음 규칙을 따른다. 행은 뒤 계층에 있는 노드의 개수, 열은 앞 계층에 있는 노드의 개수
 	for (int i = 0; i < weight_matrix_count; i++) {
 		matrix_weight_array[i].resize(each_layer_node_count[i + 1], each_layer_node_count[i]);//입력된 크기에 맞게 행렬의 크기를 바꾼다.
+		assert(_CrtCheckMemory());
 		matrix_weight_array[i].setZero();//0으로 초기화
+		assert(_CrtCheckMemory());
 		assert((i + 1) < each_layer_node_count.size());
+		assert(_CrtCheckMemory());
 		each_matrix_rows[i] = each_layer_node_count[i + 1];//matrix_weight_array[i].rows();
+		assert(_CrtCheckMemory());
 		assert(each_matrix_rows[i] >= 0);
 		assert((i) < each_layer_node_count.size());
 		each_matrix_cols[i] = each_layer_node_count[i];//matrix_weight_array[i].cols();
+		assert(_CrtCheckMemory());
 		assert(each_matrix_cols[i] >= 0);
 	}
-
+	assert(_CrtCheckMemory());
 	// 처음에 입력 행렬은 행이 5개 열이 1개이다. 5x1
 	// W2x5 * I5x1 = O2x1
 	// 행은 다음 것의 노드의 개수를 참고하고 열은 입력의 노드의 개수 참고
@@ -92,6 +99,7 @@ NeuralNetwork::~NeuralNetwork() {
 	/*if (each_hidden_node_count != nullptr)*/ delete[] each_hidden_node_count;
 	/*if (each_matrix_rows != nullptr)*/ delete[] each_matrix_rows;
 	/*if (each_matrix_cols != nullptr)*/ delete[] each_matrix_cols;
+	assert(_CrtCheckMemory());
 }
 
 void NeuralNetwork::set_weight(MatrixXd value[], size_t size) {
@@ -108,6 +116,7 @@ void NeuralNetwork::set_weight(MatrixXd value[], size_t size) {
 
 
 	}
+	assert(_CrtCheckMemory());
 }
 
 void NeuralNetwork::all_weight_reset_random() 
@@ -117,6 +126,7 @@ void NeuralNetwork::all_weight_reset_random()
 	for (size_t i = 0; i < weight_matrix_count; i++) {
 		this->matrix_weight_array[i].setRandom();
 	}
+	assert(_CrtCheckMemory());
 }
 
 size_t NeuralNetwork::query(double input_arr[], const int size) 
@@ -154,6 +164,7 @@ size_t NeuralNetwork::query(double input_arr[], const int size)
 
 	assert(Output_Matrix.cols() == 1);
 	assert(Output_Matrix.rows() == output_node_count);
+	assert(_CrtCheckMemory());
 
 	return max_node_index(Output_Matrix);
 }
@@ -175,6 +186,7 @@ MatrixXd NeuralNetwork::activation_function(MatrixXd input_array, string functio
 
 		}
 	}
+	assert(_CrtCheckMemory());
 	return return_matrix;
 }
 
@@ -203,6 +215,7 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 			max_value_index = i;
 		}
 	}
+	assert(_CrtCheckMemory());
 	return max_value_index;
 }
 

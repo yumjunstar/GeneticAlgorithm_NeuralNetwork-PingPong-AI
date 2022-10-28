@@ -23,7 +23,13 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 	assert(nn);
 	for (int i = 0; i < blades_count; i++) {
 		nn[i].make_neural_network(NeuralShape);
-		if (this->ResetRandomWeights) nn[i].all_weight_reset_random();
+		if (this->ResetWeightsMode == UNIFORM_RANDOM)
+		{
+			nn[i].all_weight_reset_random();
+		}
+		else if (this->ResetWeightsMode == NORMAL_ZERO)
+		{
+		}
 		nn[i].SetActivationFunction("relu");
 	}
 
@@ -318,8 +324,9 @@ void GeneticAlgorithm::LetsLearn()
 		crossover();
 		mutation();
 		apply();
-		fm.Write_Statistics(Generation, ppg->GetMaxScoreForLearn());
+		fm.Write_Statistics(Generation, ppg->GetGameTries(), ppg->GetMaxScoreForLearn());
 		ppg->SetGeneration(++Generation);
+		assert(_CrtCheckMemory());
 	}
 
 }

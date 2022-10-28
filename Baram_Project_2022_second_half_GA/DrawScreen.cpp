@@ -58,6 +58,8 @@ void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const 
 	}
 	prv_row = row;
 	prv_col = SIZE_OF_COL_SCREEN;
+
+	assert(_CrtCheckMemory());
 }
 void DrawScreen::draw_convert(ICON_NUMBER array_icon_symbol) {
 	switch (array_icon_symbol) {

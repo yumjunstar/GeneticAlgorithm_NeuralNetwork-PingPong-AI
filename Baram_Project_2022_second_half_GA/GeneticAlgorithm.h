@@ -10,6 +10,7 @@ class GeneticAlgorithm
 {
 public:
 	enum NNOUT_DIRECTION { UP, DOWN, STOP };
+	enum WEIGHT_RESET_ENUM { UNIFORM_RANDOM, NORMAL_ZERO, ZERO };
 	const vector<size_t> NeuralShape = { 9, 10, 10, 10, 2 };
 	//2를 사용하면 한쪽에 몰리고 3을 하면 한 곳에만 가만히 있는다.
 	// 유전 알고리즘을 사용하는 것은 큰 신경망에 적합하지 않은 것 같다.
@@ -50,7 +51,11 @@ public:
 
 	// 점수가 같으면 distance가 더 작은 개체를 우선순위로 정렬
 	const size_t WeightMatrixCount = NeuralLayerCount - 1;
-	static constexpr bool ResetRandomWeights = false;
+
+	//ZERO : 0으로 모든 가중치를 초기화
+	//NORMAL_ZERO : 0을 중심으로 모든 가중치 정규분포 초기화
+	//UNIFROM_RANDOM : -1과 1 사이로 모든 가중치 균일분포 초기화
+	static constexpr WEIGHT_RESET_ENUM ResetWeightsMode = ZERO;
 	//랜덤으로 설정하지 않는 것이 학습이 더 잘되는 것 같다.
 	static constexpr double MutationMeanValue = 0;
 	static constexpr double MutationSigmaValue = 0.01;
