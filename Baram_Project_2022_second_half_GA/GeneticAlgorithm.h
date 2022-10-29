@@ -11,7 +11,7 @@ class GeneticAlgorithm
 public:
 	enum NNOUT_DIRECTION { UP, DOWN, STOP };
 	enum WEIGHT_RESET_ENUM { UNIFORM_RANDOM, NORMAL_ZERO, ZERO };
-	const vector<size_t> NeuralShape = { 9, 10, 10, 10, 2 };
+	const vector<size_t> NeuralShape = { 9, 10, 10, 10, 3 };
 	//2를 사용하면 한쪽에 몰리고 3을 하면 한 곳에만 가만히 있는다.
 	// 유전 알고리즘을 사용하는 것은 큰 신경망에 적합하지 않은 것 같다.
 	// 랜덤 값이 각 값을 크게 바꿔버린다.
@@ -71,7 +71,12 @@ public:
 	//신경망 입력에 배수
 	static constexpr int MultipleNumberForNNInput = 1;
 
-	static constexpr size_t ForceGoToNextGeneration_ScoreStd = 100;
+
+	//학습의 속도를 빠르게 하기 위해 점수 허들을 넣을지 여부 
+	//0이면 허들 없고 그대로 점수 상승 
+	//0이상의 값이면 그 값이 도달했을때 다음세대로 진행, 리스폰이 0이고 해당 점수를 받으면 점수 허들을 두배씩 올린다.
+	static constexpr size_t FirstScoreHurdle = 100;
+	//GoalScore
 	static constexpr size_t GoalScore = 100000;
 	GeneticAlgorithm(DrawScreen* ds, size_t blades_count);
 	~GeneticAlgorithm();
@@ -92,6 +97,7 @@ private:
 	NeuralNetwork* nn;
 	PingPong* ppg;
 	DrawScreen* ds_p;
+	FileManage* fm;
 
 	size_t AllAIBladesCount;
 	size_t Generation;
@@ -105,7 +111,7 @@ private:
 	bool* KeyUp_Binary_CMD;
 	bool* KeyDown_Binary_CMD;
 
-
+	size_t CurrentScoreHuddle;
 
 
 	OneDNNWeights DNN_Copy(OneDNNWeights source, size_t size);
@@ -115,6 +121,8 @@ private:
 	void ChangeRandomDirectionForPerfectLearn(int ball_x, int RepeatLoop);
 	void OneHotEncoding(double input_arr[], int start_index, Ball_Direction dir);
 	double GetDistance(int start_x, int start_y, int end_x, int end_y);
-	
+	void SaveAllDNNWeightsIntoFile();
+	void SaveStatistics();
+	void CurrentHurdleUpdate();
 };
 

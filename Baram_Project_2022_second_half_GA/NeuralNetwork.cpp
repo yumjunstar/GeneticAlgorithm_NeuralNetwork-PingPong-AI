@@ -47,7 +47,6 @@ void NeuralNetwork::make_neural_network(const vector<size_t> each_layer_node_cou
 
 	matrix_weight_array = new MatrixXd[weight_matrix_count];//가중치 행렬의 개수만큼 할당
 	assert(matrix_weight_array);
-	assert(_CrtCheckMemory());
 
 	each_matrix_rows = new size_t[weight_matrix_count];
 	each_matrix_cols = new size_t[weight_matrix_count];
@@ -71,20 +70,14 @@ void NeuralNetwork::make_neural_network(const vector<size_t> each_layer_node_cou
 	//각 가중치의 행과 열의 크기는 다음 규칙을 따른다. 행은 뒤 계층에 있는 노드의 개수, 열은 앞 계층에 있는 노드의 개수
 	for (int i = 0; i < weight_matrix_count; i++) {
 		matrix_weight_array[i].resize(each_layer_node_count[i + 1], each_layer_node_count[i]);//입력된 크기에 맞게 행렬의 크기를 바꾼다.
-		assert(_CrtCheckMemory());
 		matrix_weight_array[i].setZero();//0으로 초기화
-		assert(_CrtCheckMemory());
 		assert((i + 1) < each_layer_node_count.size());
-		assert(_CrtCheckMemory());
 		each_matrix_rows[i] = each_layer_node_count[i + 1];//matrix_weight_array[i].rows();
-		assert(_CrtCheckMemory());
 		assert(each_matrix_rows[i] >= 0);
 		assert((i) < each_layer_node_count.size());
 		each_matrix_cols[i] = each_layer_node_count[i];//matrix_weight_array[i].cols();
-		assert(_CrtCheckMemory());
 		assert(each_matrix_cols[i] >= 0);
 	}
-	assert(_CrtCheckMemory());
 	// 처음에 입력 행렬은 행이 5개 열이 1개이다. 5x1
 	// W2x5 * I5x1 = O2x1
 	// 행은 다음 것의 노드의 개수를 참고하고 열은 입력의 노드의 개수 참고
@@ -109,8 +102,8 @@ void NeuralNetwork::set_weight(MatrixXd value[], size_t size) {
 	for (int i = 0; i < weight_matrix_count; i++) {
 		int input_rows = value[i].rows();
 		int input_cols = value[i].cols();
-		//assert(input_rows == each_matrix_rows[i]);
-		//assert(input_cols == each_matrix_cols[i]);
+		assert(input_rows == each_matrix_rows[i]);
+		assert(input_cols == each_matrix_cols[i]);
 		//대입되니깐 똑같아 진다.
 		this->matrix_weight_array[i] = value[i];
 
@@ -118,7 +111,25 @@ void NeuralNetwork::set_weight(MatrixXd value[], size_t size) {
 	}
 	assert(_CrtCheckMemory());
 }
+void NeuralNetwork::all_weight_reset_normal(double Mean, double Sigma)
+{
+	//미리 make_neural_network를 통해 크기가 정해진 뒤에 사용해야 한다.
+	assert(matrix_weight_array != nullptr && each_hidden_node_count != nullptr);
+	random_device rd;
+	mt19937_64 mt(rd());
+	normal_distribution<double> d{ Mean,  Sigma };
+	for (size_t i = 0; i < weight_matrix_count; i++) {
+		for (size_t j = 0; j < matrix_weight_array[i].rows(); ++j)
+		{
+			for (size_t k = 0; k < matrix_weight_array[i].cols(); ++k)
+			{
+				this->matrix_weight_array[i](j, k) = d(mt);
+			}
+		}
 
+	}
+	assert(_CrtCheckMemory());
+}
 void NeuralNetwork::all_weight_reset_random() 
 {
 	//미리 make_neural_network를 통해 크기가 정해진 뒤에 사용해야 한다.

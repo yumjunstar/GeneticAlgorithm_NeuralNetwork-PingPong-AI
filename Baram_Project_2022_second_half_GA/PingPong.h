@@ -17,7 +17,7 @@ private:
 	static constexpr size_t Default_AI_BladeCount = SIZE_OF_ROW_SCREEN - 10;
 	static constexpr size_t Default_Blade_Speed = 1;
 	static constexpr size_t Default_Blade_Size = 3;
-	static constexpr size_t Default_Ball_Speed = 2;
+	static constexpr size_t Default_Ball_Speed = 1;
 	static constexpr size_t Default_CurrentGeneration = 0;
 
 	//Option settings

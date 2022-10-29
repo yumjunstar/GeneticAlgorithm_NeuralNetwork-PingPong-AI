@@ -4,7 +4,7 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 {
 	//1등, 2등, 그리고 교배한 것 하나 총 3개가 기본적으로 항상 할당 되어있으므로 변이가 일어나려면 최소 4개가 되어야 한다.
 	assert(blades_count >= 4);
-
+	this->CurrentScoreHuddle = this->FirstScoreHurdle;
 	this->Generation = 0;
 	this->ds_p = ds;
 	this->AllAIBladesCount = blades_count;
@@ -15,9 +15,11 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 	Output_CMD_Array = new size_t[AllAIBladesCount];
 	KeyUp_Binary_CMD = new bool[AllAIBladesCount];
 	KeyDown_Binary_CMD = new bool[AllAIBladesCount];
+	fm = new FileManage();
 	assert(Output_CMD_Array);
 	assert(KeyUp_Binary_CMD);
 	assert(KeyDown_Binary_CMD);
+	assert(fm);
 	//신경망 생성
 	nn = new NeuralNetwork[blades_count];
 	assert(nn);
@@ -29,8 +31,10 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 		}
 		else if (this->ResetWeightsMode == NORMAL_ZERO)
 		{
+			nn[i].all_weight_reset_normal(MutationMeanValue, MutationSigmaValue_BeforeGetScore);
 		}
 		nn[i].SetActivationFunction("relu");
+		//EliteNeuralWeightMatrixVector.push_back(nn[i].ReturnAllWeightMatrix());
 	}
 
 	//변수 초기화
@@ -44,6 +48,7 @@ GeneticAlgorithm::~GeneticAlgorithm()
 
 	delete[] nn;
 	delete ppg;
+	delete fm;
 }
 void GeneticAlgorithm::CleanUpBladesForVisability(size_t GameTries, int blade_id)
 {
@@ -114,6 +119,44 @@ double GeneticAlgorithm::GetDistance(int start_x, int start_y, int end_x, int en
 	return sqrt(pow(end_x - start_x, 2) + pow(end_y - start_y, 2));
 }
 
+void GeneticAlgorithm::SaveAllDNNWeightsIntoFile()
+{
+	//순서대로 신경망을 정렬하고 파일에 저장하는 함수
+	size_t id_index = 0;
+	size_t score = 0;
+	assert(AllBladeScoreVector());
+	for (size_t i = 0; i < AllAIBladesCount; ++i)
+	{
+		//if (AllBladeScoreVector.size() == 0) // 0 세대에서 신경망의 가중치를 저장하는 경우 크기가 0일 수 있다 그때는 그냥 id 순서대로 정렬한다.
+		//{
+		//	id_index = i;
+		//	score = 0;
+		//}
+		//else
+		//{
+		id_index = AllBladeScoreVector[i].ID_index;
+		score = AllBladeScoreVector[i].score;
+		//}
+		fm->Write_OneDNNWeights_IntoFile(Generation, id_index, nn[id_index].ReturnAllWeightMatrix(),	nn[id_index].GetWeightMatrixCount(), score);
+	}
+}
+
+void GeneticAlgorithm::SaveStatistics()
+{
+	fm->Write_Statistics(Generation, ppg->GetGameTries(), ppg->GetMaxScoreForLearn());
+}
+
+void GeneticAlgorithm::CurrentHurdleUpdate()
+{
+	if (this->FirstScoreHurdle > 0)
+	{
+		if ((ppg->GetGameTries() == 0) && (ppg->GetMaxScoreForLearn() == this->CurrentScoreHuddle))
+		{
+			this->CurrentScoreHuddle += this->FirstScoreHurdle;
+		}
+	}
+}
+
 void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 {
 	//게임을 몇번 플레이 하게 할까
@@ -129,7 +172,7 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 	// 점수가 1인 것은 탁구채가 아래로 또는 위로만 움직이는 탁구채에게 이동하다가 우연히 친 것일 수도 있으므로
 	// 게임 트라이 횟수를 올리는 것이 좋다.
 	size_t GameTries = 0;
-	while ((GameTries < PerGenerationGameTries)&& (ppg->GetMaxScoreForLearn() < ForceGoToNextGeneration_ScoreStd))
+	while ((GameTries < PerGenerationGameTries)&& (ppg->GetMaxScoreForLearn() < CurrentScoreHuddle))
 	{
 
 		GameTries = ppg->GetGameTries();
@@ -311,21 +354,24 @@ void GeneticAlgorithm::ChangeRandomDirectionForPerfectLearn(int ball_x, int Repe
 }
 void GeneticAlgorithm::LetsLearn()
 {
-	FileManage fm;
 	while (true)
 	{
 		ppg->Reset();
+
 		init();
+
 		//목표 점수보다 크면 게임만 계속 반복
 		do {
 			play();
 		} while (ppg->GetMaxScoreForLearn() >= GoalScore);
 		choice();
+		SaveAllDNNWeightsIntoFile();
 		crossover();
 		mutation();
 		apply();
-		fm.Write_Statistics(Generation, ppg->GetGameTries(), ppg->GetMaxScoreForLearn());
+		SaveStatistics();
 		ppg->SetGeneration(++Generation);
+		CurrentHurdleUpdate();
 		assert(_CrtCheckMemory());
 	}
 
