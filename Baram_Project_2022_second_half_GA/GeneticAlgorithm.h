@@ -3,13 +3,10 @@
 #include "NeuralNetwork.h"
 #include "PingPong.h"
 #include "FileManage.h"
-typedef MatrixXd* OneDNNWeights;
-
 // init->play->choice->crossover->mutation 이 한 세대
 class GeneticAlgorithm
 {
 public:
-	enum NNOUT_DIRECTION { UP, DOWN, STOP };
 	enum WEIGHT_RESET_ENUM { UNIFORM_RANDOM, NORMAL_ZERO, ZERO };
 	const vector<size_t> NeuralShape = { 9, 10, 10, 10, 3 };
 	//2를 사용하면 한쪽에 몰리고 3을 하면 한 곳에만 가만히 있는다.
@@ -89,7 +86,8 @@ public:
 	void apply();
 	void LetsLearn();
 
-
+	void SetFileManage_Pointer(FileManage* fm);
+	void SetDrawScreen_Pointer(DrawScreen* ds);
 private:
 
 
@@ -97,7 +95,7 @@ private:
 	NeuralNetwork* nn;
 	PingPong* ppg;
 	DrawScreen* ds_p;
-	FileManage* fm;
+	FileManage* fm_p;
 
 	size_t AllAIBladesCount;
 	size_t Generation;

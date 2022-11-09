@@ -6,14 +6,17 @@
 #include "GeneticAlgorithm.h"
 #include "Common_Define.h"
 #include "Menu.h"
+#include "FileManage.h"
 void init_setting();
 
 int main(void) {
 	init_setting();
 	DrawScreen *dds = new DrawScreen;
-	Menu m(dds);
+	FileManage* fm = new FileManage;
+	Menu m(dds, fm);
 	m.StartMenu(100);
 	delete dds;
+	delete fm;
 }
 void init_setting()
 {

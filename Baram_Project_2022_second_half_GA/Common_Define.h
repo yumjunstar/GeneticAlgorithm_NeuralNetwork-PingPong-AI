@@ -18,6 +18,8 @@
 
 #include <cstdlib> //size_t
 #include <random>
+using namespace std;
+using namespace Eigen;
 
 #define C_NRML "\033[0m"
 #define C_BLCK "\033[30m"
@@ -58,7 +60,9 @@ enum ICON_NUMBER {
 	TOP_WALL_SYMBOL, BUTTOM_WALL_SYMBOL, LEFT_WALL_SYMBOL, RIGHT_WALL_SYMBOL
 };
 enum Ball_Direction { STOP, LEFT, UPLEFT, DOWNLEFT, RIGHT, UPRIGHT, DOWNRIGHT };
+enum NNOUT_DIRECTION { UP, DOWN, STOP_Neural };
 
+typedef MatrixXd* OneDNNWeights;
 struct Coor {
 	int x;
 	int y;
@@ -67,8 +71,11 @@ struct Blade_Info {
 	int score;
 	size_t ID_index;
 };
+struct OneDNNWeights_Include_Info {
+	OneDNNWeights weights;
+	size_t weights_count;
+	vector<size_t> NeuralShape;
+};
 
-using namespace std;
-using namespace Eigen;
 //전역 변수로 사용하고 싶었지만 DrawScreen을 불러와야 해서 못함
 //DrawScreen* dds;

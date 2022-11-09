@@ -12,10 +12,32 @@ PingPong::~PingPong() {
 
 }
 
+void PingPong::SetDrawScreen_Pointer(DrawScreen* ds)
+{
+	ds_p = ds;
+}
+
+void PingPong::SetFileManage_Pointer(FileManage* fm)
+{
+	fm_p = fm;
+	InitAI();
+}
+
 void PingPong::Reset()
 {
 	GameTries = 0;
 	ClearAllBladesScore();
+}
+// AI의 가중치를 불러와서 설정
+void PingPong::InitAI()
+{
+	OneDNNWeights_Include_Info info_of_dnn = fm_p->Read_OneDNNWeights_FromFile();
+
+
+	ai_nn = new NeuralNetwork;
+
+	ai_nn->make_neural_network(info_of_dnn.NeuralShape);
+	ai_nn->set_weight(info_of_dnn.weights, info_of_dnn.weights_count);
 }
 
 void PingPong::LearnMode_WhenBallHitAIBlade(int blade_index)
@@ -48,13 +70,12 @@ void PingPong::LearnMode_WhenBallHitRightWall()
 
 }
 
-PingPong::PingPong(DrawScreen* ds, bool LearnMode, size_t AI_Blade_Count,
+PingPong::PingPong(DrawScreen* ds_p, bool LearnMode, size_t AI_Blade_Count,
 	size_t Current_Generation, size_t BladeSpeed, size_t BladeSize, size_t BallSpeed)
 {
 	//GA에서 값을 가져오기위해 LearnMode만듬
 	//BladeBothSide는 blade를 양쪽에 놓을껀지 한쪽에 놓을건지 결정하는 매개변수
 	//AmountBladeEach는 Blade를 몇개씩 놓을껀지 (BladeBothSide가 false일때만 쓸 수 있도록 하기?)
-	this->ds_p = ds;
 	this->LearnMode = LearnMode;
 	assert(BladeSize <= SIZE_OF_ROW_SCREEN);
 	this->BladeSize = BladeSize;
@@ -66,6 +87,10 @@ PingPong::PingPong(DrawScreen* ds, bool LearnMode, size_t AI_Blade_Count,
 	this->GameTries = 0;
 	this->HideUnnecessaryBlade = false;
 	this->FastMode = false;
+	
+	this->ai_nn = nullptr;
+	this->fm_p = nullptr;
+	this->ds_p = nullptr;
 	if (LearnMode)
 	{
 		this->LearnMode_CurrentGeneration = Current_Generation;
@@ -158,6 +183,30 @@ void PingPong::ApplySizeInMapArr(ICON_NUMBER map_arr[][SIZE_OF_COL_SCREEN], ICON
 		{
 			map_arr[y][x] = Fill_Icon;
 		}
+	}
+}
+
+void PingPong::AI_Recognize_Circum_And_Move()
+{
+	Coor ball_coor = ball->GetBallCoordinate();
+	double input_arr[9] = { (double)ball_coor.x, (double)ball_coor.y };
+	OneHotEncoding(input_arr, 2, ball->get_ball_direction());
+	Coor ai_BladeCoor = blades_right_ai[0]->GetBladeCoordinate();
+	input_arr[8] = ai_BladeCoor.y;
+
+	size_t command = ai_nn->query(input_arr, 9);
+	switch (command)
+	{
+	case NNOUT_DIRECTION::UP:
+		blades_right_ai[0]->blade_move_up();
+		break;
+	case NNOUT_DIRECTION::DOWN:
+		blades_right_ai[0]->blade_move_down();
+		break;
+	case NNOUT_DIRECTION::STOP_Neural:
+		break;
+	default:
+		cout << "Error: AI가 방향을 알 수 없음" << endl;
 	}
 }
 
@@ -346,27 +395,53 @@ void PingPong::monitor_ball() {
 	}
 }
 
-void PingPong::lets_ping_pong() {
+void PingPong::lets_ping_pong_compete_mode() {
+	// 먼저 불러오고
+	// weights를 가져오고
+
 	while (!terminate) {
 		draw_game_layout();
 		play();
 		monitor_ball();
-		Sleep(DELAY_PER_FRAME);
-	}
-}
-void PingPong::lets_ping_pong(size_t repeat) 
-{
-	while (repeat > this->GameTries)
-	{
-		draw_game_layout();
-		play();
-		monitor_ball();
+		AI_Recognize_Circum_And_Move();
 		Sleep(DELAY_PER_FRAME);
 	}
 }
 bool PingPong::ShouldWeHideBlade()
 {
 	return this->HideUnnecessaryBlade;
+}
+void PingPong::OneHotEncoding(double input_arr[], int start_index, Ball_Direction dir)
+{
+	int end_index = start_index + DIRECTION_COUNT;
+	for (int i = start_index; i < end_index; i++)
+	{
+		input_arr[i] = 0;
+	}
+	switch (dir)
+	{
+	case Ball_Direction::STOP:
+		break;
+	case LEFT:
+		input_arr[start_index + LEFT - 1] = SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
+		break;
+	case UPLEFT:
+		input_arr[start_index + UPLEFT - 1] = SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
+		break;
+	case DOWNLEFT:
+		input_arr[start_index + DOWNLEFT - 1] = SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
+		break;
+	case RIGHT:
+		input_arr[start_index + RIGHT - 1] = SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
+		break;
+	case UPRIGHT:
+		input_arr[start_index + UPRIGHT - 1] = SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
+		break;
+	case DOWNRIGHT:
+		input_arr[start_index + DOWNRIGHT - 1] = SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
+		break;
+
+	}
 }
 size_t PingPong::CurrentBladeCount()
 {

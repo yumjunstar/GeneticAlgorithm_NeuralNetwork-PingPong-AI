@@ -32,7 +32,7 @@ public:
 
 	//신경망에 있는 가중치 값을 설정해주는 함수 단, 현재 신경망의 노드의 개수 크기가 같아야 한다.
 	//저장된 값을 불러와서 설정할때 그리고 가중치 값을 업데이트 할때 사용한다.
-	void set_weight(MatrixXd value[], size_t size);
+	void set_weight(MatrixXd* value, size_t size);
 
 	void all_weight_reset_normal(double Mean, double Sigma);
 	//모든 가중치 값을 -1과 1사이의 랜덤으로 초기화 할때 사용

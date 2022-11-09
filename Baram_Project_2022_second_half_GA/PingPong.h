@@ -3,8 +3,10 @@
 #include "Blade.h"
 #include "Ball.h"
 #include "DrawScreen.h"
-
+#include "FileManage.h"
 // Ping_Pong Class
+
+
 class PingPong {
 private:
 
@@ -69,7 +71,20 @@ private:
 	Blade* blades_left_player;
 	vector<Blade*> blades_right_ai;
 	Ball* ball;
+
+
+
+	// 화면 그리는 클래스
 	DrawScreen* ds_p;
+
+	// 파일 입출력하는 클래스
+	FileManage* fm_p;
+
+	// AI의 신경망
+	NeuralNetwork* ai_nn;
+
+	void InitAI();
+
 	void LearnMode_WhenBallHitAIBlade(int blade_index);
 	void LearnMode_WhenBallHitRightWall();
 
@@ -77,17 +92,22 @@ private:
 	void CompeteMode_WhenBallHitWall(Blade* player);
 	void ApplySizeInMapArr(ICON_NUMBER map_arr[][SIZE_OF_COL_SCREEN], 
 		ICON_NUMBER Fill_Icon,int start_x, int end_x, int start_y, int end_y);
+
+	void AI_Recognize_Circum_And_Move();
 public:
 
 	// constructor 학습하는 걸 가정하고 초기화
 
-	PingPong(DrawScreen* ds, bool LearnMode = Default_LearnMode,
+	PingPong(DrawScreen* ds_p, bool LearnMode = Default_LearnMode,
 		size_t AI_BladeCount = Default_AI_BladeCount,
 		size_t Current_Generation = Default_CurrentGeneration,
 		size_t BladeSpeed = Default_Blade_Speed, 
 		size_t BladeSize = Default_Blade_Size, 
 		size_t BallSpeed = Default_Ball_Speed);
 	~PingPong();
+
+	void SetDrawScreen_Pointer(DrawScreen* ds);
+	void SetFileManage_Pointer(FileManage* fm);
 
 	void Reset();
 	//살아 있는 탁구채 개수 반환
@@ -135,7 +155,10 @@ public:
 	void monitor_ball();
 
 	//게임 시작 
-	void lets_ping_pong();
-	void lets_ping_pong(size_t repeat);
+	void lets_ping_pong_compete_mode();
 	bool ShouldWeHideBlade();
+
+
+
+	void OneHotEncoding(double input_arr[], int start_index, Ball_Direction dir);
 };

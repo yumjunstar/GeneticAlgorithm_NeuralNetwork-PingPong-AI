@@ -7,15 +7,16 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 	this->CurrentScoreHuddle = this->FirstScoreHurdle;
 	this->Generation = 0;
 	this->ds_p = ds;
+	this->LoopRepeat = 0;
 	this->AllAIBladesCount = blades_count;
 	this->ppg = new PingPong(ds, true, blades_count);
-	assert(ppg);
-	LoopRepeat = 0;
+
+
 
 	Output_CMD_Array = new size_t[AllAIBladesCount];
 	KeyUp_Binary_CMD = new bool[AllAIBladesCount];
 	KeyDown_Binary_CMD = new bool[AllAIBladesCount];
-	fm = new FileManage();
+	assert(ppg);
 	assert(Output_CMD_Array);
 	assert(KeyUp_Binary_CMD);
 	assert(KeyDown_Binary_CMD);
@@ -48,7 +49,7 @@ GeneticAlgorithm::~GeneticAlgorithm()
 
 	delete[] nn;
 	delete ppg;
-	delete fm;
+	delete fm_p;
 }
 void GeneticAlgorithm::CleanUpBladesForVisability(size_t GameTries, int blade_id)
 {
@@ -124,26 +125,27 @@ void GeneticAlgorithm::SaveAllDNNWeightsIntoFile()
 	//순서대로 신경망을 정렬하고 파일에 저장하는 함수
 	size_t id_index = 0;
 	size_t score = 0;
+	// 존재 해야 하니깐
 	assert(AllBladeScoreVector());
+
+	size_t top_score_id = AllBladeScoreVector[0].ID_index;
+	size_t top_score = AllBladeScoreVector[0].score;
+	fm_p->WriteCurrentGeneration(Generation);
+	fm_p->Write_OneDNNWeights_IntoTopFile(Generation, NeuralShape, nn[top_score_id].ReturnAllWeightMatrix(), nn[top_score_id].GetWeightMatrixCount(), top_score);
+	
+	//OneDNNWeights_Include_Info abc = fm->Read_OneDNNWeights_FromFile();
+	//fm->Write_OneDNNWeights_IntoTopFile(Generation + 10000, abc.NeuralShape, abc.weights, abc.weights_count, -1);
 	for (size_t i = 0; i < AllAIBladesCount; ++i)
 	{
-		//if (AllBladeScoreVector.size() == 0) // 0 세대에서 신경망의 가중치를 저장하는 경우 크기가 0일 수 있다 그때는 그냥 id 순서대로 정렬한다.
-		//{
-		//	id_index = i;
-		//	score = 0;
-		//}
-		//else
-		//{
 		id_index = AllBladeScoreVector[i].ID_index;
 		score = AllBladeScoreVector[i].score;
-		//}
-		fm->Write_OneDNNWeights_IntoFile(Generation, id_index, nn[id_index].ReturnAllWeightMatrix(),	nn[id_index].GetWeightMatrixCount(), score);
+		fm_p->Write_OneDNNWeights_IntoSpecificFile(Generation, id_index, nn[id_index].ReturnAllWeightMatrix(),	nn[id_index].GetWeightMatrixCount(), score);
 	}
 }
 
 void GeneticAlgorithm::SaveStatistics()
 {
-	fm->Write_Statistics(Generation, ppg->GetGameTries(), ppg->GetMaxScoreForLearn());
+	fm_p->Write_Statistics(Generation, ppg->GetGameTries(), ppg->GetMaxScoreForLearn());
 }
 
 void GeneticAlgorithm::CurrentHurdleUpdate()
@@ -260,7 +262,7 @@ void GeneticAlgorithm::SetBladeDirection(NNOUT_DIRECTION dir, int blade_id)
 		KeyUp_Binary_CMD[blade_id] = false;
 		KeyDown_Binary_CMD[blade_id] = true;
 		break;
-	case STOP:
+	case STOP_Neural:
 		KeyUp_Binary_CMD[blade_id] = false;
 		KeyDown_Binary_CMD[blade_id] = false;
 		break;
@@ -301,7 +303,6 @@ void GeneticAlgorithm::mutation()//신경망 변이
 		OneDNNWeights new_temp = AddNormalDistribution(temp);
 		EliteNeuralWeightMatrixVector.push_back(new_temp);
 	}
-	//적어도 학습하려면 4개이상
 
 }
 void GeneticAlgorithm::apply()
@@ -375,4 +376,14 @@ void GeneticAlgorithm::LetsLearn()
 		assert(_CrtCheckMemory());
 	}
 
+}
+
+void GeneticAlgorithm::SetFileManage_Pointer(FileManage* fm)
+{
+	fm_p = fm;
+}
+
+void GeneticAlgorithm::SetDrawScreen_Pointer(DrawScreen* ds)
+{
+	ds_p = ds;
 }

@@ -95,7 +95,7 @@ NeuralNetwork::~NeuralNetwork() {
 	assert(_CrtCheckMemory());
 }
 
-void NeuralNetwork::set_weight(MatrixXd value[], size_t size) {
+void NeuralNetwork::set_weight(MatrixXd* value, size_t size) {
 	assert(matrix_weight_array != nullptr && each_hidden_node_count != nullptr);//행렬이 설정된 상태에서만 진행 되어야 한다.
 																				//이미 초기화때 설정을 완료하고 weight 값들만 바꾸는 것이므로 따로 개수를 받아올 필요가 없다.
 	assert(weight_matrix_count == size);
