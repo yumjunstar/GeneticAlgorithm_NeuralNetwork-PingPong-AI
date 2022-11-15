@@ -1,0 +1,54 @@
+﻿  DrawScreen.cpp
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\Half.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\BFloat16.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\GenericPacketMathFunctions.h(676,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\products\GeneralBlockPanelKernel.h(2063,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\DrawScreen.cpp(15,25): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\DrawScreen.cpp(100,18): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\DrawScreen.cpp(100,23): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\DrawScreen.cpp(107,17): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\DrawScreen.cpp(107,22): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\DrawScreen.cpp(111,16): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\DrawScreen.cpp(111,19): warning C4838: 'int'에서 'SHORT'(으)로의 변환에는 축소 변환이 필요합니다.
+  FileManage.cpp
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\Half.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\BFloat16.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\GenericPacketMathFunctions.h(676,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\products\GeneralBlockPanelKernel.h(2063,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\FileManage.cpp(4,21): warning C4244: '=': 'time_t'에서 'size_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\FileManage.cpp(201,22): warning C4244: '초기화 중': 'time_t'에서 'size_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  GeneticAlgorithm.cpp
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\Half.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\BFloat16.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\GenericPacketMathFunctions.h(676,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\products\GeneralBlockPanelKernel.h(2063,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\GeneticAlgorithm.cpp(166,35): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  Menu.cpp
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\Half.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\BFloat16.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\GenericPacketMathFunctions.h(676,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\products\GeneralBlockPanelKernel.h(2063,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+  NeuralNetwork.cpp
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\Half.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\BFloat16.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\GenericPacketMathFunctions.h(676,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\products\GeneralBlockPanelKernel.h(2063,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\NeuralNetwork.cpp(122,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\NeuralNetwork.cpp(124,25): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\NeuralNetwork.cpp(235,23): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\NeuralNetwork.cpp(237,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  PingPong.cpp
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\Half.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\BFloat16.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\GenericPacketMathFunctions.h(676,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\products\GeneralBlockPanelKernel.h(2063,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\PingPong.cpp(68,68): warning C4244: '인수': 'double'에서 'size_t'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  main.cpp
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\Half.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\BFloat16.h(1,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\arch\Default\GenericPacketMathFunctions.h(676,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\eigen\Eigen\src\Core\products\GeneralBlockPanelKernel.h(2063,1): warning C4819: 현재 코드 페이지(949)에서 표시할 수 없는 문자가 파일에 들어 있습니다. 데이터가 손실되지 않게 하려면 해당 파일을 유니코드 형식으로 저장하십시오.
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\main.cpp(28,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Baram_Project_2022_second_half_GA\FileManage.cpp(193): warning C4715: 'FileManage::ReadCurrentGeneration': 모든 제어 경로에서 값을 반환하지는 않습니다.
+  Baram_Project_2022_second_half_GA.vcxproj -> C:\Users\AOJUCBJD\source\repos\Baram_Project_2022_second_half_GA\Debug\Baram_Project_2022_second_half_GA.exe

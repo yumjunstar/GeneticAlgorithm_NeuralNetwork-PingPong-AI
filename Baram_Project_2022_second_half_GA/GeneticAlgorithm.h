@@ -52,14 +52,14 @@ public:
 	//ZERO : 0으로 모든 가중치를 초기화
 	//NORMAL_ZERO : 0을 중심으로 모든 가중치 정규분포 초기화
 	//UNIFROM_RANDOM : -1과 1 사이로 모든 가중치 균일분포 초기화
-	static constexpr WEIGHT_RESET_ENUM ResetWeightsMode = ZERO;
+	static constexpr WEIGHT_RESET_ENUM ResetWeightsMode = NORMAL_ZERO;
 	//랜덤으로 설정하지 않는 것이 학습이 더 잘되는 것 같다.
 	static constexpr double MutationMeanValue = 0;
 	static constexpr double MutationSigmaValue = 0.01;
 	static constexpr double MutationSigmaValue_BeforeGetScore = 0.05;
 	static constexpr size_t MinimumScore_BeforeChangeSigma = 2;
 	//변이 값을 너무 크게 하면 안된다. 그럼 신경망이 고장난다.
-	static constexpr double ChoiceProcessPercentage = 0.6;
+	static constexpr double Elite_Percentage = 0.3;
 	static constexpr int PerGenerationGameTries = 100;
 
 
@@ -117,8 +117,7 @@ private:
 	void SetBladeDirection(NNOUT_DIRECTION direction, int blade_id);
 	OneDNNWeights AddNormalDistribution(OneDNNWeights standard);
 	void ChangeRandomDirectionForPerfectLearn(int ball_x, int RepeatLoop);
-	void OneHotEncoding(double input_arr[], int start_index, Ball_Direction dir);
-	double GetDistance(int start_x, int start_y, int end_x, int end_y);
+	//void OneHotEncoding(double input_arr[], int start_index, Ball_Direction dir);
 	void SaveAllDNNWeightsIntoFile();
 	void SaveStatistics();
 	void CurrentHurdleUpdate();

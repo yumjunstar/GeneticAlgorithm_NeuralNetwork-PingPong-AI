@@ -15,6 +15,8 @@ private:
 	int score;
 	int MoveRangeStart_y;
 	int MoveRangeEnd_y;
+
+	double last_distance_from_ball;
 public:
 	// constructor
 	Blade(int x, int y, int ID, int BladeMoveRangeStart_y, int BladeMoveRangeEnd_y,
@@ -37,6 +39,11 @@ public:
 	size_t get_blade_size();
 	Coor GetBladeCoordinate();
 	pair<int, int> GetBladeRange();
+
+	void UpdateBetweenBallAndMeDistance(Coor ball_coordinate);
+	void UpdateBetweenBallAndMeDistance(double distance);
+	void AddBetweenBallAndMeDistance(double distance);
+	double GetBetweenBallAndMeDistance();
 }; // end of Blade class
 
 

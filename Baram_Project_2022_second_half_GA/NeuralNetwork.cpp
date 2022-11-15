@@ -60,7 +60,7 @@ void NeuralNetwork::make_neural_network(const vector<size_t> each_layer_node_cou
 	//은닉층의 노드들의 개수만 따로 정리해 둔 것
 	this->each_hidden_node_count = new size_t[hidden_layer_count];
 	assert(this->each_hidden_node_count);
-	for (int i = 0; i < hidden_layer_count; i++) {
+	for (size_t i = 0; i < hidden_layer_count; ++i) {
 		assert((i + 1) < each_layer_node_count.size());
 		this->each_hidden_node_count[i] = each_layer_node_count[i + 1];
 	}
@@ -68,7 +68,7 @@ void NeuralNetwork::make_neural_network(const vector<size_t> each_layer_node_cou
 
 
 	//각 가중치의 행과 열의 크기는 다음 규칙을 따른다. 행은 뒤 계층에 있는 노드의 개수, 열은 앞 계층에 있는 노드의 개수
-	for (int i = 0; i < weight_matrix_count; i++) {
+	for (size_t i = 0; i < weight_matrix_count; ++i) {
 		matrix_weight_array[i].resize(each_layer_node_count[i + 1], each_layer_node_count[i]);//입력된 크기에 맞게 행렬의 크기를 바꾼다.
 		matrix_weight_array[i].setZero();//0으로 초기화
 		assert((i + 1) < each_layer_node_count.size());
@@ -99,7 +99,7 @@ void NeuralNetwork::set_weight(MatrixXd* value, size_t size) {
 	assert(matrix_weight_array != nullptr && each_hidden_node_count != nullptr);//행렬이 설정된 상태에서만 진행 되어야 한다.
 																				//이미 초기화때 설정을 완료하고 weight 값들만 바꾸는 것이므로 따로 개수를 받아올 필요가 없다.
 	assert(weight_matrix_count == size);
-	for (int i = 0; i < weight_matrix_count; i++) {
+	for (size_t i = 0; i < weight_matrix_count; ++i) {
 		int input_rows = value[i].rows();
 		int input_cols = value[i].cols();
 		assert(input_rows == each_matrix_rows[i]);
@@ -118,7 +118,7 @@ void NeuralNetwork::all_weight_reset_normal(double Mean, double Sigma)
 	random_device rd;
 	mt19937_64 mt(rd());
 	normal_distribution<double> d{ Mean,  Sigma };
-	for (size_t i = 0; i < weight_matrix_count; i++) {
+	for (size_t i = 0; i < weight_matrix_count; ++i) {
 		for (size_t j = 0; j < matrix_weight_array[i].rows(); ++j)
 		{
 			for (size_t k = 0; k < matrix_weight_array[i].cols(); ++k)
@@ -134,19 +134,19 @@ void NeuralNetwork::all_weight_reset_random()
 {
 	//미리 make_neural_network를 통해 크기가 정해진 뒤에 사용해야 한다.
 	assert(matrix_weight_array != nullptr && each_hidden_node_count != nullptr);
-	for (size_t i = 0; i < weight_matrix_count; i++) {
+	for (size_t i = 0; i < weight_matrix_count; ++i) {
 		this->matrix_weight_array[i].setRandom();
 	}
 	assert(_CrtCheckMemory());
 }
 
-size_t NeuralNetwork::query(double input_arr[], const int size) 
+size_t NeuralNetwork::query(double input_arr[], const size_t size) 
 {
 	assert(matrix_weight_array != nullptr && each_hidden_node_count != nullptr);
 	assert(input_node_count == size);
 	MatrixXd Input_Matrix;
 	Input_Matrix.resize(size, 1);//행이 size, 열이 1개이다.
-	for (int i = 0; i < size; i++) {
+	for (size_t i = 0; i < size; ++i) {
 
 		Input_Matrix(i, 0) = input_arr[i];
 
@@ -160,7 +160,7 @@ size_t NeuralNetwork::query(double input_arr[], const int size)
 
 	MatrixXd Output_Matrix;
 	//처음부터 입력값과 가중치를 곱하고 그 뒤에 다시 노드들의 값을 곱하고 이런식으로 진행 된다.
-	for (size_t i = 0; i < weight_matrix_count; i++) {
+	for (size_t i = 0; i < weight_matrix_count; ++i) {
 		//서로 행렬곱을 해야 하므로 반드시 열과 행이 같아야 한다.
 		assert(matrix_weight_array[i].cols() == Temp_Input_Matrix.rows());
 		//중간 출력 행렬
@@ -182,12 +182,12 @@ size_t NeuralNetwork::query(double input_arr[], const int size)
 
 MatrixXd NeuralNetwork::activation_function(MatrixXd input_array, string function_name) const
 {
-	int r = input_array.rows();
-	int c = input_array.cols();
+	size_t r = input_array.rows();
+	size_t c = input_array.cols();
 	MatrixXd return_matrix;
 	return_matrix.resize(r, c);
-	for (int i = 0; i < r; i++) {//행
-		for (int j = 0; j < c; j++) {//열
+	for (size_t i = 0; i < r; ++i) {//행
+		for (size_t j = 0; j < c; ++j) {//열
 			if (function_name == "sigmoid") {
 				return_matrix(i, j) = sigmoid(input_array(i, j));
 			}
@@ -218,7 +218,7 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 	size_t row_size = arr.rows();
 	double max_value = arr(0, 0);
 	size_t max_value_index = 0;
-	for (size_t i = 0; i < row_size; i++)
+	for (size_t i = 0; i < row_size; ++i)
 	{
 		//i행 1열
 		if (arr(i, 0) > max_value) {
@@ -232,9 +232,9 @@ size_t NeuralNetwork::max_node_index(MatrixXd arr)
 
 void NeuralNetwork::PrintMatrix(MatrixXd matrix) const
 {
-	for (int j = 0; j < matrix.rows(); j++)
+	for (size_t j = 0; j < matrix.rows(); ++j)
 	{
-		for (int k = 0; k < matrix.cols(); k++)
+		for (size_t k = 0; k < matrix.cols(); ++k)
 		{
 			printf("%lf ", matrix(j, k));
 		}
@@ -256,4 +256,37 @@ size_t NeuralNetwork::GetWeightMatrixCount()
 void NeuralNetwork::SetActivationFunction(string function_name)
 {
 	this->ActivationFunction = function_name;
+}
+
+void NeuralNetwork::OneHotEncoding(double input_arr[], size_t start_index, Ball_Direction dir)
+{
+	size_t end_index = start_index + DIRECTION_COUNT;
+	for (size_t i = start_index; i < end_index; ++i)
+	{
+		input_arr[i] = 0;
+	}
+	switch (dir)
+	{
+	case Ball_Direction::STOP:
+		break;
+	case LEFT:
+		input_arr[start_index + LEFT - 1] = 9.99;//SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
+		break;
+	case UPLEFT:
+		input_arr[start_index + UPLEFT - 1] = 9.99;//SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
+		break;
+	case DOWNLEFT:
+		input_arr[start_index + DOWNLEFT - 1] = 9.99;//SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
+		break;
+	case RIGHT:
+		input_arr[start_index + RIGHT - 1] = 9.99;//SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
+		break;
+	case UPRIGHT:
+		input_arr[start_index + UPRIGHT - 1] = 9.99;//SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
+		break;
+	case DOWNRIGHT:
+		input_arr[start_index + DOWNRIGHT - 1] = 9.99;//SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
+		break;
+
+	}
 }

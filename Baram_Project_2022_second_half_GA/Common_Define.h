@@ -42,8 +42,8 @@ using namespace Eigen;
 #define BLANK_ICON "　"
 
 
-#define SIZE_OF_ROW_SCREEN 50
-#define SIZE_OF_COL_SCREEN 40
+#define SIZE_OF_ROW_SCREEN 30//70 , 30
+#define SIZE_OF_COL_SCREEN 50//50
 
 #define MAX_Y_CAN_GO SIZE_OF_ROW_SCREEN - 2
 #define MIN_Y_CAN_GO 2
@@ -51,14 +51,15 @@ using namespace Eigen;
 #define MAX_X_CAN_GO SIZE_OF_COL_SCREEN - 2
 #define MIN_X_CAN_GO 2
 
-#define DIRECTION_COUNT 6
-#define DELAY_PER_FRAME 30
+
+#define DELAY_PER_FRAME 25
 
 //배열에 어떤값으로 저장할지 정의 하는 enum
 enum ICON_NUMBER {
 	BLANK_SYMBOL, BALL_SYMBOL, LEFT_BLADE_SYMBOL, RIGHT_BLADE_SYMBOL,
 	TOP_WALL_SYMBOL, BUTTOM_WALL_SYMBOL, LEFT_WALL_SYMBOL, RIGHT_WALL_SYMBOL
 };
+#define DIRECTION_COUNT 6
 enum Ball_Direction { STOP, LEFT, UPLEFT, DOWNLEFT, RIGHT, UPRIGHT, DOWNRIGHT };
 enum NNOUT_DIRECTION { UP, DOWN, STOP_Neural };
 
@@ -69,6 +70,7 @@ struct Coor {
 };
 struct Blade_Info {
 	int score;
+	double last_distance_from_ball;
 	size_t ID_index;
 };
 struct OneDNNWeights_Include_Info {

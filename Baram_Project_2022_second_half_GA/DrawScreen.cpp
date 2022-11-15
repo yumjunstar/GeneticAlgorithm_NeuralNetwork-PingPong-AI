@@ -5,21 +5,21 @@ void DrawScreen::screen_clear()
 	system("cls");
 }
 
-void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const int row) {
-	static int prv_row = 0;
-	static int prv_col = 0;
+void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const size_t row) {
+	static size_t prv_row = 0;
+	static size_t prv_col = 0;
 	static int** prv_arr = nullptr;
 	if ((prv_row != row) || (prv_col != SIZE_OF_COL_SCREEN)) {//아예 크기 조차 다르면 다시 지우고 다시 해야 한다.
 		//이전 배열을 저장한 것을 그대로 사용할 수 없고 의미가 없으므로 지운다.
 		if (prv_arr != nullptr) {
-			for (int k = 0; k < prv_row; k++) {
+			for (size_t k = 0; k < prv_row; ++k) {
 				delete[] prv_arr[k];
 			}
 		}
 
 		prv_arr = new int* [row];
 		assert(prv_arr);
-		for (int k = 0; k < row; k++) {
+		for (size_t k = 0; k < row; ++k) {
 			prv_arr[k] = new int[SIZE_OF_COL_SCREEN];
 			assert(prv_arr[k]);
 		}
@@ -27,16 +27,16 @@ void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const 
 
 
 		//system("cls");
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < SIZE_OF_COL_SCREEN; j++) {
+		for (size_t i = 0; i < row; ++i) {
+			for (size_t j = 0; j < SIZE_OF_COL_SCREEN; ++j) {
 				gotoxy(j, i);//x, y;
 				draw_convert(arr[i][j]);
 			}
 		}
 	}
 	else {//크기가 같으면
-		for (int i = 0; i < row; i++) {
-			for (int j = 0; j < SIZE_OF_COL_SCREEN; j++) {
+		for (size_t i = 0; i < row; ++i) {
+			for (size_t j = 0; j < SIZE_OF_COL_SCREEN; ++j) {
 				if (prv_arr[i][j] != arr[i][j]) {//바뀐 부분만 이동해서 출력한다.
 					gotoxy(j, i);//x, y;
 					draw_convert(arr[i][j]);
@@ -51,8 +51,8 @@ void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const 
 	//2k 으로 옮기게 해야 한다.
 
 
-	for (int i = 0; i < row; i++) {//여기는 항상 이전과 이후의 배열 크기가 같아야 한다.
-		for (int j = 0; j < SIZE_OF_COL_SCREEN; j++) {
+	for (size_t i = 0; i < row; ++i) {//여기는 항상 이전과 이후의 배열 크기가 같아야 한다.
+		for (size_t j = 0; j < SIZE_OF_COL_SCREEN; ++j) {
 			prv_arr[i][j] = arr[i][j];
 		}
 	}
@@ -118,11 +118,11 @@ void DrawScreen::hide_cursor(){
 	info.bVisible = FALSE;
 	SetConsoleCursorInfo(consoleHandle, &info);
 }
-void DrawScreen::center_text(const string text[], int NumberOfStr, bool Line_Number, int Sort_Type) {
+void DrawScreen::center_text(const string text[], size_t NumberOfStr, bool Line_Number, int Sort_Type) {
 	
 	assert(SIZE_OF_ROW_SCREEN >= NumberOfStr);
 	int write_row_pos = (SIZE_OF_ROW_SCREEN - NumberOfStr) / 2;
-	for (int i = 0; i < NumberOfStr; i++) {
+	for (size_t i = 0; i < NumberOfStr; ++i) {
 		//라인별 쓰기 시작 위치 전체 크기의 절반 - 텍스트 길이의 절반
 		int each_str_size = text[i].size();
 		assert(SIZE_OF_COL_SCREEN >= each_str_size);

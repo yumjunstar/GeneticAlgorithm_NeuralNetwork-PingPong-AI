@@ -24,7 +24,7 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 	//신경망 생성
 	nn = new NeuralNetwork[blades_count];
 	assert(nn);
-	for (int i = 0; i < blades_count; i++) {
+	for (size_t i = 0; i < blades_count; ++i) {
 		nn[i].make_neural_network(NeuralShape);
 		if (this->ResetWeightsMode == UNIFORM_RANDOM)
 		{
@@ -66,7 +66,7 @@ void GeneticAlgorithm::CleanUpBladesForVisability(size_t GameTries, int blade_id
 //초기 집단 설정 신경망 만들기 각 세대마다 초기화 반복 아니면 setweight 만 하든지 둘중에 하나
 void GeneticAlgorithm::init()
 {
-
+	// 맨 처음에 학습
 	AllBladeCoorVector.clear();
 	AllBladeScoreVector.clear();
 
@@ -76,55 +76,21 @@ OneDNNWeights GeneticAlgorithm::DNN_Copy(OneDNNWeights source, size_t size)
 	assert(size == WeightMatrixCount);
 	OneDNNWeights temp = new MatrixXd[size];
 	assert(temp);
-	for (size_t i = 0; i < size; i++)
+	for (size_t i = 0; i < size; ++i)
 	{
 		temp[i] = source[i];
 	}
 	return temp;
 }
-void GeneticAlgorithm::OneHotEncoding(double input_arr[], int start_index, Ball_Direction dir)
-{
-	int end_index = start_index + DIRECTION_COUNT;
-	for (int i = start_index; i < end_index; i++)
-	{
-		input_arr[i] = 0;
-	}
-	switch (dir)
-	{
-	case Ball_Direction::STOP:
-		break;
-	case LEFT:
-		input_arr[start_index + LEFT - 1] = SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
-		break;
-	case UPLEFT:
-		input_arr[start_index + UPLEFT - 1] = SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
-		break;
-	case DOWNLEFT:
-		input_arr[start_index + DOWNLEFT - 1] = SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
-		break;
-	case RIGHT:
-		input_arr[start_index + RIGHT - 1] = SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
-		break;
-	case UPRIGHT:
-		input_arr[start_index + UPRIGHT - 1] = SIZE_OF_COL_SCREEN; // 1 * MultipleNumberForNNInput;
-		break;
-	case DOWNRIGHT:
-		input_arr[start_index + DOWNRIGHT - 1] = SIZE_OF_COL_SCREEN; //1 * MultipleNumberForNNInput;
-		break;
 
-	}
-}
 
-double GeneticAlgorithm::GetDistance(int start_x, int start_y, int end_x, int end_y)
-{
-	return sqrt(pow(end_x - start_x, 2) + pow(end_y - start_y, 2));
-}
 
 void GeneticAlgorithm::SaveAllDNNWeightsIntoFile()
 {
 	//순서대로 신경망을 정렬하고 파일에 저장하는 함수
 	size_t id_index = 0;
 	size_t score = 0;
+	double distance = 0;
 	// 존재 해야 하니깐
 	assert(AllBladeScoreVector());
 
@@ -139,7 +105,8 @@ void GeneticAlgorithm::SaveAllDNNWeightsIntoFile()
 	{
 		id_index = AllBladeScoreVector[i].ID_index;
 		score = AllBladeScoreVector[i].score;
-		fm_p->Write_OneDNNWeights_IntoSpecificFile(Generation, id_index, nn[id_index].ReturnAllWeightMatrix(),	nn[id_index].GetWeightMatrixCount(), score);
+		distance = AllBladeScoreVector[i].last_distance_from_ball;
+		fm_p->Write_OneDNNWeights_IntoSpecificFile(Generation, id_index, nn[id_index].ReturnAllWeightMatrix(),	nn[id_index].GetWeightMatrixCount(), score, distance);
 	}
 }
 
@@ -184,21 +151,22 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 
 		//공의 위치와 방향
 		Coor BallCoor = ppg->GetBallCoor();
+
 		Ball_Direction ball_direction = ppg->GetBallDirection();
 
 
-		double input_arr[9] = { (double)BallCoor.x, (double)BallCoor.y };// 실수의 정확도가 떨어져서 정수형으로 넣는게 나을 것 같음
+		double input_arr[9] = { (double)BallCoor.x/(SIZE_OF_COL_SCREEN/10.0), (double)BallCoor.y/(SIZE_OF_ROW_SCREEN/10.0) };// 실수의 정확도가 떨어져서 정수형으로 넣는게 나을 것 같음
 	//	double input_arr[9] = { ((BallCoor.x / (double)SIZE_OF_COL_SCREEN) + 0.1) * MultipleNumberForNNInput
 	//, ((BallCoor.y / (double)SIZE_OF_ROW_SCREEN) + 0.1) * MultipleNumberForNNInput };
-		OneHotEncoding(input_arr, 2, ball_direction);
+		nn[0].OneHotEncoding(input_arr, 2, ball_direction);
 
 
 		AllBladeCoorVector = ppg->GetAllRightAIBladeCoor();
 
-		for (int blade_id = 0; blade_id < AllAIBladesCount; blade_id++)
+		for (size_t blade_id = 0; blade_id < AllAIBladesCount; ++blade_id)
 		{
 			Coor BladeCoor = AllBladeCoorVector[blade_id];
-			input_arr[8] = BladeCoor.y;
+			input_arr[8] = (double)BladeCoor.y/(SIZE_OF_ROW_SCREEN/10.0);
 			//input_arr[9] = GetDistance(BallCoor.x, BallCoor.y, BladeCoor.x, BladeCoor.y);
 			Output_CMD_Array[blade_id] = nn[blade_id].query(input_arr, InputNodeCount);
 			SetBladeDirection((NNOUT_DIRECTION)Output_CMD_Array[blade_id], blade_id);
@@ -209,11 +177,11 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 		}
 
 
-		//this->ChangeRandomDirectionForPerfectLearn(BallCoor.x, LoopRepeat);
+
 
 		ppg->key_up(KeyUp_Binary_CMD, AllAIBladesCount);
 		ppg->key_down(KeyDown_Binary_CMD, AllAIBladesCount);
-
+		this->ChangeRandomDirectionForPerfectLearn(BallCoor.x, LoopRepeat);
 		LoopRepeat = (LoopRepeat + 1) % 1000000;
 	}
 
@@ -222,17 +190,30 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 }
 void GeneticAlgorithm::choice()//신경망 고르기
 {
-	sort(AllBladeScoreVector.begin(), AllBladeScoreVector.end(), [](Blade_Info& a, Blade_Info& b)->bool {return a.score > b.score; });
+	sort(AllBladeScoreVector.begin(), AllBladeScoreVector.end(), [](Blade_Info& a, Blade_Info& b)->bool { 
+		if (a.score > b.score)
+		{
+			return true;
+		}
+		else if (a.score == b.score)
+		{
+			if (a.last_distance_from_ball < b.last_distance_from_ball) // 점수가 같을때 더 가까운 곳에 떨어진 것이 점수가 더 높음
+			{
+				return true;
+			}
+		}
+		return false;
+		});
 
 
 	//10%의 엘리트 들을 뽑아 그대로 넣는다.
 	//2보다 작을 경우에는 그냥 2개를 뽑는다.
 	
-	size_t elite_number = ((this->AllAIBladesCount * ChoiceProcessPercentage) < 2) ? 2 : (size_t)(this->AllAIBladesCount * ChoiceProcessPercentage);
+	size_t elite_number = ((this->AllAIBladesCount * Elite_Percentage) < 2) ? 2 : (size_t)(this->AllAIBladesCount * Elite_Percentage);
 
 	//엘리트들만 미리 뽑아 복사 해놓는다. 이전 신경망들은 지울꺼기 때문이다. 아니면 특정 id만 빼고 지울까.
 	vector<OneDNNWeights> elite_dnn;
-	for (size_t i = 0; i < elite_number; i++) 
+	for (size_t i = 0; i < elite_number; ++i) 
 	{
 		//DNN_Copy는 신경망 하나를 DeepCopy 하는 함수이다. 이를 pushback 해서 다음 세대를 위해 채운다.
 		//순서대로 push 한다. 점수가 가장 높은게 top 에 위치한다.
@@ -240,7 +221,7 @@ void GeneticAlgorithm::choice()//신경망 고르기
 	}
 
 	//엘리트 두개
-	for (size_t i = 0; i < EliteNeuralWeightMatrixVector.size(); i++)
+	for (size_t i = 0; i < EliteNeuralWeightMatrixVector.size(); ++i)
 	{
 		delete[] EliteNeuralWeightMatrixVector[i];
 	}
@@ -276,40 +257,71 @@ void GeneticAlgorithm::SetBladeDirection(NNOUT_DIRECTION dir, int blade_id)
 void GeneticAlgorithm::crossover()//신경망 교차
 {
 	//한개의 신경망을 위한 가중치들의 묶음 값이다.
-	MatrixXd* EliteWeightCrossOverForOneNN = new MatrixXd[WeightMatrixCount];
-	assert(EliteWeightCrossOverForOneNN);
-
+	MatrixXd* EliteWeightCrossOverForOneNN1 = new MatrixXd[WeightMatrixCount];
+	MatrixXd* EliteWeightCrossOverForOneNN2 = new MatrixXd[WeightMatrixCount];
+	assert(EliteWeightCrossOverForOneNN1);
+	assert(EliteWeightCrossOverForOneNN2);
 
 	//엘리트 가중치 묶음의 묶음 개수 vector<MatrixXd*>
 	assert (EliteNeuralWeightMatrixVector.size() > 1);
 	//엘리트 가중치끼리 다 더해서 평균을 낼 것이다.
 	//엘리트 가중치 1개 -> 여러개의 행렬 덧셈
+	size_t elite_count = EliteNeuralWeightMatrixVector.size();
 
-	for (size_t i = 0; i < WeightMatrixCount; ++i)
+	size_t choice_elite_one_index = rand() % elite_count;
+	//엘리트트가 3개이면
+	//3부터 총 탁구채 개수만큼
+	size_t choice_notelite_one_index = rand() %(this->AllAIBladesCount - 1 - elite_count + 1) + elite_count;
+	assert(choice_notelite_one_index == this->AllAIBladesCount);
+	// a ~ b-1까지
+
+	//엘리트와 평범 교배
+	for (size_t i = 0; i < WeightMatrixCount; ++i) // 가중치 행렬의 개수
 	{
-		EliteWeightCrossOverForOneNN[i] = (EliteNeuralWeightMatrixVector[0][i] + EliteNeuralWeightMatrixVector[1][i]) / 2.;
+		// 엘리트에서 하나 랜덤으로 고르고, 평범한테 랜덤으로 골라서 교배 시키자
+		EliteWeightCrossOverForOneNN1[i] = (EliteNeuralWeightMatrixVector[choice_elite_one_index][i] 
+			+ nn[AllBladeScoreVector[choice_notelite_one_index].ID_index].ReturnAllWeightMatrix()[i]) / 2.;
 	}
 
-	EliteNeuralWeightMatrixVector.push_back(EliteWeightCrossOverForOneNN);
+	//엘리트와 엘리트들끼리 교배
+	for (size_t i = 0; i < WeightMatrixCount; ++i) // 가중치 행렬의 개수
+	{
+		// 엘리트에서 하나 랜덤으로 고르고, 평범한테 랜덤으로 골라서 교배 시키자
+		EliteWeightCrossOverForOneNN2[i] = (EliteNeuralWeightMatrixVector[0][i] + EliteNeuralWeightMatrixVector[1][i]) / 2.;
+	}
+
+	EliteNeuralWeightMatrixVector.push_back(EliteWeightCrossOverForOneNN1);
+	EliteNeuralWeightMatrixVector.push_back(EliteWeightCrossOverForOneNN2);
 }
 
 void GeneticAlgorithm::mutation()//신경망 변이
 {
 
+	size_t size_of_elite = EliteNeuralWeightMatrixVector.size();
 
-	OneDNNWeights temp = EliteNeuralWeightMatrixVector.back();
-	for (size_t i = 0; EliteNeuralWeightMatrixVector.size() < AllAIBladesCount; i++)
+	OneDNNWeights temp1 = EliteNeuralWeightMatrixVector[size_of_elite - 1];
+	OneDNNWeights temp2 = EliteNeuralWeightMatrixVector[size_of_elite - 2];
+
+	// 뒤에서 한개 두개 뽑아서 (그게 교차 된거 두개 니깐)
+
+	for (size_t i = 0; EliteNeuralWeightMatrixVector.size() < AllAIBladesCount; ++i)
 	{
-		OneDNNWeights new_temp = AddNormalDistribution(temp);
-		EliteNeuralWeightMatrixVector.push_back(new_temp);
+		// 번갈아가면서 넣기
+		OneDNNWeights new_temp1 = AddNormalDistribution(temp1);
+		EliteNeuralWeightMatrixVector.push_back(new_temp1);
+		
+		if (EliteNeuralWeightMatrixVector.size() < AllAIBladesCount) {
+			OneDNNWeights new_temp2 = AddNormalDistribution(temp2);
+			EliteNeuralWeightMatrixVector.push_back(new_temp2);
+		}
 	}
-
+	assert(AllAIBladesCount == EliteNeuralWeightMatrixVector.size());
 }
 void GeneticAlgorithm::apply()
 {
 	size_t SonCount = EliteNeuralWeightMatrixVector.size();
 	assert(SonCount == AllAIBladesCount);
-	for (size_t  i = 0; i < SonCount; i++)
+	for (size_t  i = 0; i < SonCount; ++i)
 	{
 		nn[i].set_weight(EliteNeuralWeightMatrixVector[i], WeightMatrixCount);
 	}
@@ -329,13 +341,13 @@ OneDNNWeights GeneticAlgorithm::AddNormalDistribution(OneDNNWeights standard)
 	OneDNNWeights copy_standard = DNN_Copy(standard, WeightMatrixCount);
 
 
-	for (size_t i = 0; i < WeightMatrixCount; i++)
+	for (size_t i = 0; i < WeightMatrixCount; ++i)
 	{
 		size_t rows = (size_t)copy_standard[i].rows();
 		size_t cols = (size_t)copy_standard[i].cols();
-		for (size_t j = 0; j < rows; j++)
+		for (size_t j = 0; j < rows; ++j)
 		{
-			for (size_t k = 0; k < cols; k++)
+			for (size_t k = 0; k < cols; ++k)
 			{
 				copy_standard[i](j, k) += d(mt);
 			}
@@ -347,9 +359,9 @@ void GeneticAlgorithm::ChangeRandomDirectionForPerfectLearn(int ball_x, int Repe
 {
 	if (ball_x < (SIZE_OF_COL_SCREEN / 2))
 	{
-		if (RepeatLoop % 10 == 1)
+		if (RepeatLoop % 1000 == 1)
 		{
-			for (int i = 0; i < 10; i++) ppg->SetRandomBallDirection();
+			for (int i = 0; i < 10; ++i) ppg->SetRandomBallDirection();
 		}
 	}
 }

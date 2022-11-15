@@ -22,7 +22,7 @@ public:
 	const string AllDNNWeightsSaveExtension = ".txt";
 public:
 	FileManage();
-	void Write_OneDNNWeights_IntoSpecificFile(size_t Generation, size_t id, const OneDNNWeights Weights, size_t WeightsCount, size_t Score);
+	void Write_OneDNNWeights_IntoSpecificFile(size_t Generation, size_t id, const OneDNNWeights Weights, size_t WeightsCount, size_t Score, double distance);
 	void Write_OneDNNWeights_IntoTopFile(size_t Generation, vector<size_t> NeuralShape, const OneDNNWeights Weights, size_t WeightsCount, size_t score);
 	OneDNNWeights_Include_Info Read_OneDNNWeights_FromFile(size_t Generation);
 	OneDNNWeights_Include_Info Read_OneDNNWeights_FromFile();//√÷Ω≈ Generation

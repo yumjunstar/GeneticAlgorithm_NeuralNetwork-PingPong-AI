@@ -49,7 +49,10 @@ void Ball::randomize_ball_pos()
 // function to move ball around the screen
 
 Coor Ball::GetBallCoordinate() const {
-	return Coor({ x, y });
+	Coor abc;
+	abc.x = this->x;
+	abc.y = this->y;
+	return abc;
 }
 
 void Ball::SetBallDirection(Ball_Direction dir)

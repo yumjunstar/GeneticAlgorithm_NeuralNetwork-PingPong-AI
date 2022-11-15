@@ -42,7 +42,7 @@ void FileManage::Write_OneDNNWeights_IntoTopFile(size_t Generation, vector<size_
 		cout << "Write_OneDNNWeights_IntoTopFile 에서 파일을 쓸 수 없습니다." << endl;
 	}
 }
-void FileManage::Write_OneDNNWeights_IntoSpecificFile(size_t Generation, size_t id, const OneDNNWeights Weights, size_t WeightsCount, size_t Score)
+void FileManage::Write_OneDNNWeights_IntoSpecificFile(size_t Generation, size_t id, const OneDNNWeights Weights, size_t WeightsCount, size_t Score, double distance)
 {
 	string ModifiedFileName = AllDNNWeightsSaveFileName + "_" + to_string(Generation) + AllDNNWeightsSaveExtension;
 	ofstream fout;
@@ -58,8 +58,9 @@ void FileManage::Write_OneDNNWeights_IntoSpecificFile(size_t Generation, size_t 
 
 	if (fout)
 	{
-		fout << "<" << id << ">"<<":" <<Score<<endl;
-		for (int i = 0; i < WeightsCount; i++)
+		fout << "<" << id << ">" << ":" << "Score:" << Score << endl;
+		fout<<"Distance:" <<distance << endl;
+		for (size_t i = 0; i < WeightsCount; ++i)
 		{
 			fout << Weights[i] << endl; 
 			fout << "#" << endl;

@@ -17,7 +17,8 @@ private:
 
 	static constexpr bool Default_LearnMode = true;
 	static constexpr size_t Default_AI_BladeCount = SIZE_OF_ROW_SCREEN - 10;
-	static constexpr size_t Default_Blade_Speed = 1;
+	static constexpr size_t Default_Blade_Speed = 3;
+	static constexpr size_t Default_AI_Blade_Speed = 1;
 	static constexpr size_t Default_Blade_Size = 3;
 	static constexpr size_t Default_Ball_Speed = 1;
 	static constexpr size_t Default_CurrentGeneration = 0;
@@ -65,6 +66,9 @@ private:
 	//거의 도태되는 탁구채는 어떻게 할지 정하기
 	bool HideUnnecessaryBlade;
 
+	// 학습 중 화면을 출력할지 여부
+	bool HideScreen;
+
 	//가속모드
 	bool FastMode;
 	//Blade 객체 생성
@@ -101,7 +105,8 @@ public:
 	PingPong(DrawScreen* ds_p, bool LearnMode = Default_LearnMode,
 		size_t AI_BladeCount = Default_AI_BladeCount,
 		size_t Current_Generation = Default_CurrentGeneration,
-		size_t BladeSpeed = Default_Blade_Speed, 
+		size_t BladeSpeed = Default_Blade_Speed,
+		size_t AI_Blade_Speed = Default_AI_Blade_Speed,
 		size_t BladeSize = Default_Blade_Size, 
 		size_t BallSpeed = Default_Ball_Speed);
 	~PingPong();
@@ -158,7 +163,6 @@ public:
 	void lets_ping_pong_compete_mode();
 	bool ShouldWeHideBlade();
 
-
-
-	void OneHotEncoding(double input_arr[], int start_index, Ball_Direction dir);
+	double GetDistance(int start_x, int start_y, int end_x, int end_y);
+	double GetDistance(Coor start, Coor end);
 };

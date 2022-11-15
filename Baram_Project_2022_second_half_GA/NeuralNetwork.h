@@ -41,7 +41,7 @@ public:
 	//precondition: input_arr이 입력값이다, size는 input_node_count와 같아야 한다.
 	//postcondition: 가장 활성도가 높은 노드의 위치를 나타낸다. output_node_count 3이면 0, 1, 2중 값 반환
 	//활성화 함수
-	size_t query(double input_arr[], const int size);
+	size_t query(double input_arr[], const size_t size);
 
 
 	MatrixXd activation_function(MatrixXd input_array, string function_name) const;
@@ -53,5 +53,6 @@ public:
 	MatrixXd* ReturnAllWeightMatrix();
 	size_t GetWeightMatrixCount();
 	void SetActivationFunction(string function_name);
+	void OneHotEncoding(double input_arr[], size_t start_index, Ball_Direction dir);
 };
 
