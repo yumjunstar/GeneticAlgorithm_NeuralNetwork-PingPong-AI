@@ -28,12 +28,10 @@ public:
 	OneDNNWeights_Include_Info Read_OneDNNWeights_FromFile();//√÷Ω≈ Generation
 	void WriteCurrentGeneration(size_t Generation);
 	size_t ReadCurrentGeneration();
-	void ReadConfig();
 	void Write_Statistics(size_t Generation, size_t Respawn, size_t Score);
 
 private:
 	int Generation;
-	//vector<size_t> NeuralShape;
 	size_t Created_Time;
 };
 

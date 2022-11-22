@@ -20,7 +20,6 @@ GeneticAlgorithm::GeneticAlgorithm(DrawScreen* ds, size_t blades_count)
 	assert(Output_CMD_Array);
 	assert(KeyUp_Binary_CMD);
 	assert(KeyDown_Binary_CMD);
-	assert(fm);
 	//신경망 생성
 	nn = new NeuralNetwork[blades_count];
 	assert(nn);
@@ -53,15 +52,16 @@ GeneticAlgorithm::~GeneticAlgorithm()
 }
 void GeneticAlgorithm::CleanUpBladesForVisability(size_t GameTries, int blade_id)
 {
-	if (ppg->GetMaxScoreForLearn() > CleanUpStartScore)
-	{
+	//const size_t top_ai_id = ppg->GetMaxScoreIndexForLearn();
+	//if (ppg->GetMaxScoreForLearn() > CleanUpStartScore)
+	//{
 
-		if (ppg->GetAIBladeScore(blade_id) < CleanUpMinimumScore)
-		{
-			KeyUp_Binary_CMD[blade_id] = true;
-			KeyDown_Binary_CMD[blade_id] = false;
-		}
-	}
+	//	if (ppg->GetAIBladeScore(blade_id) < CleanUpMinimumScore)
+	//	{
+	//		KeyUp_Binary_CMD[blade_id] = true;
+	//		KeyDown_Binary_CMD[blade_id] = false;
+	//	}
+	//}
 }
 //초기 집단 설정 신경망 만들기 각 세대마다 초기화 반복 아니면 setweight 만 하든지 둘중에 하나
 void GeneticAlgorithm::init()
@@ -92,7 +92,7 @@ void GeneticAlgorithm::SaveAllDNNWeightsIntoFile()
 	size_t score = 0;
 	double distance = 0;
 	// 존재 해야 하니깐
-	assert(AllBladeScoreVector());
+	assert(AllBladeScoreVector.size());
 
 	size_t top_score_id = AllBladeScoreVector[0].ID_index;
 	size_t top_score = AllBladeScoreVector[0].score;
@@ -158,7 +158,7 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 		double input_arr[9] = { (double)BallCoor.x/(SIZE_OF_COL_SCREEN/10.0), (double)BallCoor.y/(SIZE_OF_ROW_SCREEN/10.0) };// 실수의 정확도가 떨어져서 정수형으로 넣는게 나을 것 같음
 	//	double input_arr[9] = { ((BallCoor.x / (double)SIZE_OF_COL_SCREEN) + 0.1) * MultipleNumberForNNInput
 	//, ((BallCoor.y / (double)SIZE_OF_ROW_SCREEN) + 0.1) * MultipleNumberForNNInput };
-		nn[0].OneHotEncoding(input_arr, 2, ball_direction);
+		NeuralNetwork::OneHotEncoding(input_arr, 2, ball_direction);
 
 
 		AllBladeCoorVector = ppg->GetAllRightAIBladeCoor();
@@ -170,10 +170,6 @@ void GeneticAlgorithm::play()//게임 시작하고 여러 신경망을 평가해서 저장
 			//input_arr[9] = GetDistance(BallCoor.x, BallCoor.y, BladeCoor.x, BladeCoor.y);
 			Output_CMD_Array[blade_id] = nn[blade_id].query(input_arr, InputNodeCount);
 			SetBladeDirection((NNOUT_DIRECTION)Output_CMD_Array[blade_id], blade_id);
-			if (ppg->ShouldWeHideBlade())
-			{
-				CleanUpBladesForVisability(GameTries, blade_id);
-			}
 		}
 
 

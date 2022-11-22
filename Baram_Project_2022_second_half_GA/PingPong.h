@@ -45,8 +45,7 @@ private:
 	size_t RightAIBladeRemainCount;
 
 	//학습 모드에서 AI 탁구채 점수 중 최대 점수
-	size_t LearnMode_MaxAIScore;
-
+	Blade_Info LearnMode_MaxScoreAI;
 	//경쟁 모드에서 플레이어의 점수
 	size_t CompeteMode_LeftPlayerScore;
 	//경쟁 모드에서 AI의 점수
@@ -131,6 +130,9 @@ public:
 	size_t GetAIBladeScore(size_t index);
 	//최대 점수 반환 학습을 위한
 	size_t GetMaxScoreForLearn();
+	size_t GetMaxScoreIndexForLearn();
+	double GetMaxScoreAIDistanceForLearn();
+
 	void ClearAllBladesScore();
 	//현재 공의 위치 반환
 	Coor GetBallCoor();

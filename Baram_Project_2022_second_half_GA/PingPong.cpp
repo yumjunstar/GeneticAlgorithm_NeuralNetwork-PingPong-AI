@@ -47,8 +47,25 @@ void PingPong::LearnMode_WhenBallHitAIBlade(int blade_index)
 	// 아니다 이렇게 되면 안된다. 여기가 아니라 탁구채가 오른쪽 벽에 닿았을때 점수를 모두 업데이트 해야 의미가 있다.
 
 	this->blades_right_ai[blade_index]->add_score(1);
-	size_t ai_score = this->blades_right_ai[blade_index]->GetCountinusMAXScore();
-	if (ai_score > this->LearnMode_MaxAIScore) this->LearnMode_MaxAIScore = ai_score;
+
+	//update max score ai
+	const size_t ai_score = this->blades_right_ai[blade_index]->GetCountinusMAXScore();
+	const double blade_distance = this->blades_right_ai[blade_index]->GetBetweenBallAndMeDistance();
+	if (ai_score > this->LearnMode_MaxScoreAI.score)
+	{
+		this->LearnMode_MaxScoreAI.score = ai_score;
+		this->LearnMode_MaxScoreAI.ID_index = blade_index;
+		this->LearnMode_MaxScoreAI.last_distance_from_ball = blade_distance;
+	}
+	else if (ai_score == this->LearnMode_MaxScoreAI.score)
+	{
+		if (this->LearnMode_MaxScoreAI.last_distance_from_ball > blade_distance)
+		{
+			this->LearnMode_MaxScoreAI.score = ai_score;
+			this->LearnMode_MaxScoreAI.ID_index = blade_index;
+			this->LearnMode_MaxScoreAI.last_distance_from_ball = blade_distance;
+		}
+	}
 
 	//(Ball_Direction)((rand() % 6) + 1);
 	////enum Ball_Direction { STOP, LEFT, UPLEFT, DOWNLEFT, RIGHT, UPRIGHT, DOWNRIGHT };
@@ -90,14 +107,14 @@ PingPong::PingPong(DrawScreen* ds_p, bool LearnMode, size_t AI_Blade_Count,
 	this->terminate = false;
 
 	this->blades_left_player = nullptr;
-	this->LearnMode_MaxAIScore = 0;
+	this->LearnMode_MaxScoreAI = {0, 0, 0};
 	this->GameTries = 0;
 	this->HideUnnecessaryBlade = false;
 	this->FastMode = false;
 	
 	this->ai_nn = nullptr;
 	this->fm_p = nullptr;
-	this->ds_p = nullptr;
+	this->ds_p = ds_p;
 	this->HideScreen = false;
 
 	if (LearnMode)
@@ -106,8 +123,6 @@ PingPong::PingPong(DrawScreen* ds_p, bool LearnMode, size_t AI_Blade_Count,
 
 		this->CompeteMode_LeftPlayerScore = -1;
 		this->CompeteMode_RightAIScore = -1;
-
-		this->LearnMode_MaxAIScore = 0;
 
 		//AI Blade의 개수가 화면 크기보다 크면 안되므로 이렇게 설정한다.
 		this->RightAIBladeRemainCount = AI_Blade_Count;
@@ -120,7 +135,7 @@ PingPong::PingPong(DrawScreen* ds_p, bool LearnMode, size_t AI_Blade_Count,
 		this->CompeteMode_LeftPlayerScore = 0;
 		this->CompeteMode_RightAIScore = 0;
 
-		this->LearnMode_MaxAIScore = -1;
+		this->LearnMode_MaxScoreAI = { -1, 0, 0 };
 
 		this->LeftPlayerBladeRemainCount = 1;
 		this->RightAIBladeRemainCount = 1;
@@ -199,7 +214,7 @@ void PingPong::AI_Recognize_Circum_And_Move()
 {
 	Coor ball_coor = ball->GetBallCoordinate();
 	double input_arr[9] = { (double)ball_coor.x / (SIZE_OF_COL_SCREEN / 10.0), (double)ball_coor.y / (SIZE_OF_ROW_SCREEN / 10.0)};
-	ai_nn->OneHotEncoding(input_arr, 2, ball->get_ball_direction());
+	NeuralNetwork::OneHotEncoding(input_arr, 2, ball->get_ball_direction());
 	Coor ai_BladeCoor = blades_right_ai[0]->GetBladeCoordinate();
 	input_arr[8] = (double)ai_BladeCoor.y / (SIZE_OF_ROW_SCREEN / 10.0);
 
@@ -235,14 +250,26 @@ void PingPong::draw_game_layout() {
 		ApplySizeInMapArr(map_arr, LEFT_BLADE_SYMBOL, blades_cor.x, blades_cor.x,
 			range.first, range.second);
 	}
-	for (size_t i = 0; i < blades_right_ai.size(); ++i) {//AI의 BLADE
-		blades_cor = blades_right_ai[i]->GetBladeCoordinate();
-		pair<int, int> range = blades_right_ai[i]->GetBladeRange();
+
+
+	if (HideUnnecessaryBlade)
+	{
+		const size_t top_ai_index = LearnMode_MaxScoreAI.ID_index;
+		//cout << LearnMode_MaxScoreAI.score << endl;
+		blades_cor = blades_right_ai[top_ai_index]->GetBladeCoordinate();
+		pair<int, int> range = blades_right_ai[top_ai_index]->GetBladeRange();
 		ApplySizeInMapArr(map_arr, RIGHT_BLADE_SYMBOL, blades_cor.x, blades_cor.x,
 			range.first, range.second);
-
 	}
-
+	else
+	{
+		for (size_t i = 0; i < blades_right_ai.size(); ++i) {//AI의 BLADE
+			blades_cor = blades_right_ai[i]->GetBladeCoordinate();
+			pair<int, int> range = blades_right_ai[i]->GetBladeRange();
+			ApplySizeInMapArr(map_arr, RIGHT_BLADE_SYMBOL, blades_cor.x, blades_cor.x,
+				range.first, range.second);
+		}
+	}
 	for (size_t j = 0; j < SIZE_OF_COL_SCREEN; ++j) {
 		map_arr[0][j] = TOP_WALL_SYMBOL;
 		map_arr[SIZE_OF_ROW_SCREEN - 1][j] = BUTTOM_WALL_SYMBOL;
@@ -258,7 +285,7 @@ void PingPong::draw_game_layout() {
 
 
 
-	ds_p->update_info(LearnMode, this->GameTries, this->LearnMode_MaxAIScore, CompeteMode_RightAIScore, CompeteMode_LeftPlayerScore,
+	ds_p->update_info(LearnMode, this->GameTries, this->LearnMode_MaxScoreAI.score, CompeteMode_RightAIScore, CompeteMode_LeftPlayerScore,
 		this->LearnMode_CurrentGeneration, this->FastMode, this->HideUnnecessaryBlade);
 
 	ds_p->draw_layout(map_arr, SIZE_OF_ROW_SCREEN);
@@ -291,11 +318,20 @@ void PingPong::play() {
 			break;
 		case 'h':
 			HideUnnecessaryBlade = !HideUnnecessaryBlade;
+			break;
 		case 'm':
 			HideScreen = !HideScreen;
 			break;
 		case 't':
 			terminate = !terminate;
+			break;
+		case 'l':
+			ds_p->screen_clear();
+			break;
+		case 'q':
+			this->Reset();
+			ball->reset_ball();
+			ball->SetBallDirection(Ball_Direction::STOP);
 			break;
 		}
 
@@ -484,18 +520,37 @@ size_t PingPong::GetAIBladeScore(size_t index)
 size_t PingPong::GetMaxScoreForLearn()
 {
 	//모든 탁구채들의 연속 탁구 최대 기록 중 가장 큰 값
-	return LearnMode_MaxAIScore;
+	return LearnMode_MaxScoreAI.score;
 }
-
+size_t PingPong::GetMaxScoreIndexForLearn() 
+{
+	return LearnMode_MaxScoreAI.ID_index;
+}
+double PingPong::GetMaxScoreAIDistanceForLearn()
+{
+	return LearnMode_MaxScoreAI.last_distance_from_ball;
+}
 void PingPong::ClearAllBladesScore()
 {
-	LearnMode_MaxAIScore = 0;
+	if (LearnMode)
+	{
+		LearnMode_MaxScoreAI = { 0, 0, 0 };
+	}
+	else
+	{
+		blades_left_player->set_score(0);
+		CompeteMode_LeftPlayerScore = 0;
+		CompeteMode_RightAIScore = 0;
+	}
 	for (size_t i = 0; i < RightAIBladeRemainCount; ++i)
 	{
 		blades_right_ai[i]->set_score(0);
 		blades_right_ai[i]->CountinusMAXScore_SetScore(0);
 		blades_right_ai[i]->UpdateBetweenBallAndMeDistance(0);
 	}
+
+
+
 }
 
 Coor PingPong::GetBallCoor()

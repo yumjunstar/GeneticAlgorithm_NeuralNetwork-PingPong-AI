@@ -9,6 +9,9 @@ public:
 	DrawScreen() {
 		hide_cursor();
 		screen_clear();
+		prv_row = 0;
+		prv_col = 0;
+		prv_arr = nullptr;
 	}
 	void screen_clear();
 	void draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const size_t row);
@@ -18,12 +21,20 @@ public:
 	void update_info(bool LearnMode, int GameTries, int LearnMode_AI_maxscore = -1,
 		int CompeteMode_RightAIScore = -1, int CompeteMode_LeftPlayerScore = -1, int Gen = -1, bool Acceleration = false, bool Hide = false);
 	//player_score이나 ai_score가 -1면 표시 안하기
+	static void set_title(string value);
+	static void hide_scrollbar();
+	static void set_console_size(size_t rows, size_t cols);
 private:
 	void hide_cursor();
 	void draw_convert(ICON_NUMBER array_icon_symbol);//배열에 있는 SYMBOL을 ICON으로 출력해주는 함수
 	void gotoxy(int x, int y);//ICON을 출력할때 사용하는 이동 함수 CommonDefine에 USE_2BYTE_CHAR 고려
 	void gotoxy_for_only_1byte(int x, int y);
 	void gotoxy_for_only_2byte(int x, int y);
+
+
+	size_t prv_row;
+	size_t prv_col;
+	int** prv_arr;
 };
 
 

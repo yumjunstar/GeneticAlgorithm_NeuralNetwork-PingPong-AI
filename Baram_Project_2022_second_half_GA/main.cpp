@@ -26,9 +26,9 @@ void init_setting()
 	//그냥 끝에 가만히 있는 것들도 들어온다.
 	//멀티 스레딩으로 화면 출력하기
 	srand(time(NULL));
-	char temp[100];
-	sprintf_s(temp, 100, "mode con cols=%d lines=%d | title %s", SIZE_OF_COL_SCREEN + 50, SIZE_OF_ROW_SCREEN + 10, "Ping Pong AI");
-	system(temp);
+	DrawScreen::set_title("PingPong AI");
+	DrawScreen::set_console_size(SIZE_OF_ROW_SCREEN, SIZE_OF_COL_SCREEN);
+	DrawScreen::hide_scrollbar();
 	//SetConsoleDisplayMode(GetStdHandle(STD_OUTPUT_HANDLE), CONSOLE_FULLSCREEN_MODE, 0);
 	//system("color 42");
 }

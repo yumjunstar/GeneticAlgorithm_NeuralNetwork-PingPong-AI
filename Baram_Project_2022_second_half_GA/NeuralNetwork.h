@@ -38,21 +38,19 @@ public:
 	//모든 가중치 값을 -1과 1사이의 랜덤으로 초기화 할때 사용
 	void all_weight_reset_random();
 
+	static double sigmoid(double x);
+	static double relu(double x);
+	static void OneHotEncoding(double input_arr[], size_t start_index, Ball_Direction dir);
+	static size_t max_node_index(MatrixXd arr);
+
 	//precondition: input_arr이 입력값이다, size는 input_node_count와 같아야 한다.
 	//postcondition: 가장 활성도가 높은 노드의 위치를 나타낸다. output_node_count 3이면 0, 1, 2중 값 반환
 	//활성화 함수
 	size_t query(double input_arr[], const size_t size);
-
-
 	MatrixXd activation_function(MatrixXd input_array, string function_name) const;
-	static double sigmoid(double x);
-	static double relu(double x);
-	static size_t max_node_index(MatrixXd arr);
-	void PrintMatrix(MatrixXd matrix) const;
-
 	MatrixXd* ReturnAllWeightMatrix();
 	size_t GetWeightMatrixCount();
 	void SetActivationFunction(string function_name);
-	void OneHotEncoding(double input_arr[], size_t start_index, Ball_Direction dir);
+	void PrintMatrix(MatrixXd matrix) const;
 };
 

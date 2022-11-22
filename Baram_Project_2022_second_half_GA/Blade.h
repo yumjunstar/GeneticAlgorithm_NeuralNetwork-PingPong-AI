@@ -3,28 +3,16 @@
 
 // Blade Class
 class Blade {
-private:
-	int x, y, initial_x, initial_y; // to hold position of blades (current and default)
-	static constexpr size_t DefaultBladeSize = 1;
-	static constexpr size_t DefaultBladeSpeed = 1;
 
-	int blade_size;
-	int id;
-	int CountinusMAXScoreBeforeDeath;
-	int speed;
-	int score;
-	int MoveRangeStart_y;
-	int MoveRangeEnd_y;
-
-	double last_distance_from_ball;
 public:
 	// constructor
 	Blade(int x, int y, int ID, int BladeMoveRangeStart_y, int BladeMoveRangeEnd_y,
 	int size = DefaultBladeSize, int speed = DefaultBladeSpeed);
+
 	// to reset blade positions while Ping_Pong restarting
 	void blade_reset();
 
-	// to move balde up
+	// blade move up function
 	void blade_move_up();
 	void blade_move_down();
 	bool is_hit_blade(int check_x, int check_y);
@@ -44,6 +32,21 @@ public:
 	void UpdateBetweenBallAndMeDistance(double distance);
 	void AddBetweenBallAndMeDistance(double distance);
 	double GetBetweenBallAndMeDistance();
+
+private:
+	int x, y, initial_x, initial_y; // to hold position of blades (current and default)
+	static constexpr size_t DefaultBladeSize = 1;
+	static constexpr size_t DefaultBladeSpeed = 1;
+
+	int blade_size;
+	int id;
+	int CountinusMAXScoreBeforeDeath;
+	int speed;
+	int score;
+	int MoveRangeStart_y;
+	int MoveRangeEnd_y;
+
+	double last_distance_from_ball;
 }; // end of Blade class
 
 

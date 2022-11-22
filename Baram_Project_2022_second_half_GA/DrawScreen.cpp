@@ -3,12 +3,12 @@
 void DrawScreen::screen_clear()
 {
 	system("cls");
+	prv_row = 0;
+	prv_col = 0;
+	hide_scrollbar();
 }
 
 void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const size_t row) {
-	static size_t prv_row = 0;
-	static size_t prv_col = 0;
-	static int** prv_arr = nullptr;
 	if ((prv_row != row) || (prv_col != SIZE_OF_COL_SCREEN)) {//아예 크기 조차 다르면 다시 지우고 다시 해야 한다.
 		//이전 배열을 저장한 것을 그대로 사용할 수 없고 의미가 없으므로 지운다.
 		if (prv_arr != nullptr) {
@@ -26,7 +26,7 @@ void DrawScreen::draw_layout(const ICON_NUMBER arr[][SIZE_OF_COL_SCREEN], const 
 
 
 
-		//system("cls");
+		system("cls");
 		for (size_t i = 0; i < row; ++i) {
 			for (size_t j = 0; j < SIZE_OF_COL_SCREEN; ++j) {
 				gotoxy(j, i);//x, y;
@@ -106,6 +106,30 @@ void DrawScreen::gotoxy(int x, int y){
 void DrawScreen::gotoxy_for_only_2byte(int x, int y) {
 	COORD pos = { x<<1 ,y };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+void DrawScreen::set_title(string value)
+{
+	char temp[100];
+	sprintf_s(temp, 100, "title %s", value.c_str());
+	system(temp);
+}
+void DrawScreen::hide_scrollbar()
+{
+	HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO info;
+	GetConsoleScreenBufferInfo(handle, &info);
+	COORD new_size =
+	{
+		info.srWindow.Right - info.srWindow.Left + 1,
+		info.srWindow.Bottom - info.srWindow.Top + 1
+	};
+	SetConsoleScreenBufferSize(handle, new_size);
+}
+void DrawScreen::set_console_size(size_t rows, size_t cols)
+{
+	char temp[100];
+	sprintf_s(temp, 100, "mode con cols=%d lines=%d", cols + 50, rows + 5);
+	system(temp);
 }
 void DrawScreen::gotoxy_for_only_1byte(int x, int y) {
 	COORD pos = { x ,y };

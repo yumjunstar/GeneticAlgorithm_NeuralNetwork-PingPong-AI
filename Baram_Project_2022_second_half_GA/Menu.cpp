@@ -22,6 +22,7 @@ void Menu::StartMenu(const int BladeCount) {
 	if (key == 1) //학습 모드
 	{
 		GeneticAlgorithm* ga = new GeneticAlgorithm(ds_p, BladeCount);
+		DrawScreen::set_title("AI Learn Mode");
 		ga->SetFileManage_Pointer(fm_p);
 		assert(ga);
 		ga->LetsLearn();
@@ -29,7 +30,7 @@ void Menu::StartMenu(const int BladeCount) {
 	}
 	else if (key == 2) //경쟁 모드
 	{
-
+		DrawScreen::set_title("AI Compete Mode");
 		PingPong* game_version = new PingPong(ds_p, false);
 		game_version->SetFileManage_Pointer(fm_p);
 

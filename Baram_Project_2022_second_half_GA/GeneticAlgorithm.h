@@ -117,7 +117,6 @@ private:
 	void SetBladeDirection(NNOUT_DIRECTION direction, int blade_id);
 	OneDNNWeights AddNormalDistribution(OneDNNWeights standard);
 	void ChangeRandomDirectionForPerfectLearn(int ball_x, int RepeatLoop);
-	//void OneHotEncoding(double input_arr[], int start_index, Ball_Direction dir);
 	void SaveAllDNNWeightsIntoFile();
 	void SaveStatistics();
 	void CurrentHurdleUpdate();

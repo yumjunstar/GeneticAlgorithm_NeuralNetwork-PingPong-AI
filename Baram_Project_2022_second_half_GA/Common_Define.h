@@ -1,5 +1,5 @@
 #pragma once
-#define NDEBUG
+//#define NDEBUG
 #include <cassert>
 #include <cstdio>
 #include <Windows.h>
@@ -15,7 +15,7 @@
 #include <utility>
 #include <list>
 #include <cmath>//
-
+#include <iostream>
 #include <cstdlib> //size_t
 #include <random>
 using namespace std;
@@ -42,9 +42,17 @@ using namespace Eigen;
 #define BLANK_ICON "　"
 
 
-#define SIZE_OF_ROW_SCREEN 30//70 , 30
-#define SIZE_OF_COL_SCREEN 50//50
-
+#define SIZE_OF_ROW_SCREEN 30
+#define SIZE_OF_COL_SCREEN 50
+// 세로로 긴 것
+//ROW:70
+//COL:50
+// 가로로 긴 것
+//ROW:30
+//COL:50
+// 정상
+//ROW:35
+//COL:50
 #define MAX_Y_CAN_GO SIZE_OF_ROW_SCREEN - 2
 #define MIN_Y_CAN_GO 2
 
