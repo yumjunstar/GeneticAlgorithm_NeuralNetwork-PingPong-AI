@@ -10,17 +10,17 @@ This project contains Neural Network and Genetic Algorithm methods
 
 <img width="40%" src="https://user-images.githubusercontent.com/24960675/205273813-800be894-5298-4b26-98e1-fcdb92d9abf4.png"/>
 
-PingPong Game AI [Learn Mode] AI스스로 학습 하는 과정 5세대까지
+PingPong Game AI [Learn Mode] AI스스로 학습 하는 과정 5세대까지  
 https://www.youtube.com/embed/gepndoqHS2g
 
 ## Compete Mode Screen
 
 <img width="40%" src="https://user-images.githubusercontent.com/24960675/205274080-e00902ff-e089-4732-9de7-b9dc3026b75f.png"/>
 
-PingPong Game AI [Compete Mode] 학습된 AI가 무작위 방향으로 움직이는 공을 실시간으로 받아치는 영상
+PingPong Game AI [Compete Mode] 학습된 AI가 무작위 방향으로 움직이는 공을 실시간으로 받아치는 영상  
 https://www.youtube.com/embed/QL2jh1409GA
 
-PingPong Game AI [Compete Mode] 플레이어와 AI가 탁구 치는 모습
+PingPong Game AI [Compete Mode] 플레이어와 AI가 탁구 치는 모습  
 https://www.youtube.com/embed/ShWFLJb_L6o
 
 ## Training Results
