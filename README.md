@@ -6,11 +6,19 @@ This project contains Neural Network and Genetic Algorithm methods
 
 <img width="40%" src="https://user-images.githubusercontent.com/24960675/194831122-1112a3fe-3fb1-40cc-90a1-f036c840131c.png"/>
 
-
 ## Learn Mode Screen
 
-<img width="40%" src="https://user-images.githubusercontent.com/24960675/194830909-0937c07d-3924-4329-9073-643bbc3f7264.png"/>
+<img width="40%" src="https://user-images.githubusercontent.com/24960675/205273813-800be894-5298-4b26-98e1-fcdb92d9abf4.png"/>
+
+<iframe width="640" height="360" src="https://www.youtube.com/embed/gepndoqHS2g" title="PingPong Game AI [Learn Mode] AI스스로 학습 하는 과정 5세대까지" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## Compete Mode Screen
 
-<img width="40%" src="https://user-images.githubusercontent.com/24960675/194831276-eb9b72b7-2a0f-4ccd-9b7e-d55a30c20335.png"/>
+<img width="40%" src="https://user-images.githubusercontent.com/24960675/205274080-e00902ff-e089-4732-9de7-b9dc3026b75f.png"/>
+
+<iframe width="590" height="332" src="https://www.youtube.com/embed/QL2jh1409GA" title="PingPong Game AI [Compete Mode] 학습된 AI가 무작위 방향으로 움직이는 공을 실시간으로 받아치는 영상" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe width="590" height="332" src="https://www.youtube.com/embed/ShWFLJb_L6o" title="PingPong Game AI [Compete Mode] 플레이어와 AI가 탁구 치는 모습" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+## Training Results
+
+<img width="40%" src="https://user-images.githubusercontent.com/24960675/205269136-6f48b6ef-fc9b-4276-a293-9e2f75122831.png"/>
