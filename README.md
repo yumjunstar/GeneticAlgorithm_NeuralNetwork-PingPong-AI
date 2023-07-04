@@ -2,6 +2,10 @@
 
 This project contains Neural Network and Genetic Algorithm methods
 
+Learning Rate automatically changes while training
+
+Neural Network Using Eigen library
+
 ## First Main Menu
 
 <img width="40%" src="https://user-images.githubusercontent.com/24960675/194831122-1112a3fe-3fb1-40cc-90a1-f036c840131c.png"/>
