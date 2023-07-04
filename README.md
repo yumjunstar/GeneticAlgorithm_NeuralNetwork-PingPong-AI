@@ -6,6 +6,7 @@ Learning Rate automatically changes while training
 
 Neural Network Using Eigen library
 
+Can save weight file and load weight files
 ## First Main Menu
 
 <img width="40%" src="https://user-images.githubusercontent.com/24960675/194831122-1112a3fe-3fb1-40cc-90a1-f036c840131c.png"/>
