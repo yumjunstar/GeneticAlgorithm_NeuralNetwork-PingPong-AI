@@ -33,6 +33,7 @@ https://www.youtube.com/embed/ShWFLJb_L6o
 <img width="40%" src="https://user-images.githubusercontent.com/24960675/205269136-6f48b6ef-fc9b-4276-a293-9e2f75122831.png"/>
 
 # Todo List
-
+<ol>
  [ ] MultiThreading
  [ ] Graphic User Interface application
+</ol>
